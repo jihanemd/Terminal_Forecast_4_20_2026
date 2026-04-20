@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terminal L/D Predictor</title>
+  <meta name="description" content="Prédiction Load / Discharge par lane terminale.">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ══════ SIDEBAR ══════ -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <rect x="1" y="5" width="16" height="8" rx="2" stroke="white" stroke-width="1.5"/>
+          <path d="M5 5V4a4 4 0 018 0v1" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M6 9h6M9 7v4" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Terminal L/D</div>
+        <div class="brand-sub">Predictor</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section-label">Navigation</div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" id="nav-predict" onclick="setPage('predict')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12V6l6-4 6 4v6a1 1 0 01-1 1H3a1 1 0 01-1-1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 13V9h4v4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span>Prédiction</span>
+      </button>
+      <button class="nav-item" id="nav-import" onclick="setPage('import')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M4 5h8M4 8h8M4 11h5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>Import fichier</span>
+      </button>
+      <button class="nav-item" id="nav-compare" onclick="setPage('compare')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12V5M6 12V7M10 12V4M14 12V8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>Comparaison</span>
+        <span class="nav-badge">Nouveau</span>
+      </button>
+      <button class="nav-item" id="nav-fm" onclick="setPage('fm')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="6" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="3" width="6" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M4 7h0M4 9h0M12 7h0M12 9h0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span>Full / Empty</span>
+        <span class="nav-badge">Nouveau</span>
+      </button>
+      <button class="nav-item" id="nav-teu" onclick="setPage('teu')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="4" width="14" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M4 4V3a1 1 0 011-1h6a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M5 8.5h2M9 8.5h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>TEU</span>
+        <span class="nav-badge">Nouveau</span>
+      </button>
+      <button class="nav-item" id="nav-update" onclick="setPage('update')">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v5l3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 2v5l-3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <span>Mise à jour</span>
+        <span class="nav-dot" id="updateDot" style="display:none"></span>
+      </button>
+    </nav>
+
+    <div class="sidebar-section-label" style="margin-top:8px">Outils</div>
+    <nav class="sidebar-nav">
+      <a class="nav-item" href="/admin">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.4"/></svg>
+        <span>Admin lanes</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-stats">
+        <div class="ss-item"><span class="ss-val" id="sidebarLaneCount">—</span><span class="ss-lbl">lanes</span></div>
+        <div class="ss-divider"></div>
+        <div class="ss-item"><span class="ss-dot" id="sidebarStatusDot"></span><span class="ss-lbl" id="sidebarStatusLbl">—</span></div>
+      </div>
+      <button class="theme-toggle" onclick="toggleDarkMode()" id="themeToggle">
+        <svg id="iconMoon" width="14" height="14" viewBox="0 0 15 15" fill="none"><path d="M13 9.5A5.5 5.5 0 015.5 2a6.5 6.5 0 100 11A5.5 5.5 0 0113 9.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <svg id="iconSun"  width="14" height="14" viewBox="0 0 15 15" fill="none" style="display:none"><circle cx="7.5" cy="7.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Dark mode
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════ MAIN ══════ -->
+  <main class="main-content">
+
+    <!-- ── Page: Prédiction ── -->
+    <div class="page-panel active" id="page-predict">
+      <div class="page-header">
+        <div>
+          <h1>Prédiction Load / Discharge</h1>
+          <p>Estimez la répartition L/D pour une lane en saisissant le volume navire.</p>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-icon-wrap kpi-blue"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1.5L10 6h4.5l-3.5 2.8 1.5 4.7L8 10.5l-4.5 3 1.5-4.7L1.5 6H6L8 1.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></div><div><div class="kpi-num" id="kpiLanes">—</div><div class="kpi-lbl">Lanes actives</div></div></div>
+        <div class="kpi-card kpi-green"><div class="kpi-icon-wrap kpi-ig"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="kpi-num" id="kpiFresh">—</div><div class="kpi-lbl">Récentes <span class="kpi-hint">&lt;6 mois</span></div></div></div>
+        <div class="kpi-card kpi-amber"><div class="kpi-icon-wrap kpi-ia"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14.5 13.5H1.5L8 2Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M8 6.5v3M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="kpi-num" id="kpiStale">—</div><div class="kpi-lbl">À rafraîchir <span class="kpi-hint">6–12m</span></div></div></div>
+        <div class="kpi-card kpi-red"><div class="kpi-icon-wrap kpi-ir"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 5.5v3.5M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div><div><div class="kpi-num" id="kpiOutdated">—</div><div class="kpi-lbl">Obsolètes <span class="kpi-hint">&gt;12m</span></div></div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header-row">
+          <h2 class="card-title-lg">Calculer L/D</h2>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>Lane</label>
+            <div class="combobox" id="laneCombobox">
+              <div class="combo-field" id="comboField" onclick="toggleCombo()">
+                <span class="combo-dot" id="comboDot"></span>
+                <span class="combo-text" id="comboText">— Choisir —</span>
+                <svg class="combo-chevron" id="comboChevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="combo-dropdown" id="comboDropdown" style="display:none">
+                <div class="combo-search-wrap"><input type="text" id="comboSearch" class="combo-search" placeholder="Rechercher…" oninput="filterCombo()" autocomplete="off" spellcheck="false"></div>
+                <div class="combo-list" id="comboList"></div>
+              </div>
+            </div>
+            <input type="hidden" id="selectedLane">
+          </div>
+          <div>
+            <label for="volumeInput">Volume navire</label>
+            <input type="number" id="volumeInput" placeholder="Ex: 3500" min="1" max="99999" step="1">
+          </div>
+        </div>
+        <div class="or-divider">ou saisir manuellement</div>
+        <div class="form-group">
+          <label for="laneText">Nom de la lane</label>
+          <input type="text" id="laneText" placeholder="Ex: FAL1WB, EPIC…" oninput="onLaneText()" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="btn-primary" id="btnPredict" onclick="predict()">Calculer Load &amp; Discharge</button>
+        <div id="resultManual"></div>
+      </div>
+
+      <!-- Historique -->
+      <div class="card card-history" id="historyCard" style="display:none">
+        <div class="history-header">
+          <span class="card-title-sm">Historique de session</span>
+          <button class="btn-ghost-sm" onclick="clearHistory()">Effacer</button>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </div>
+    </div>
+
+    <!-- ── Page: Import ── -->
+    <div class="page-panel" id="page-import">
+      <div class="page-header"><div><h1>Import fichier</h1><p>Importez un fichier Excel ou CSV avec colonnes <strong>Lane</strong> et <strong>Volume</strong>.</p></div></div>
+      <div class="card">
+        <div class="drop-zone" id="dropZone"
+             onclick="document.getElementById('fileInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDrop(event)">
+          <div class="dz-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 8l4-4 4 4M4 17h16v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Glisser-déposer ou cliquer</div>
+          <div class="dz-sub">Excel (.xlsx, .xls) ou CSV · colonnes Lane + Volume</div>
+        </div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFile(event)">
+        <div id="batchResult"></div>
+      </div>
+    </div>
+
+    <!-- ── Page: Comparaison ── -->
+    <div class="page-panel" id="page-compare">
+      <div class="page-header"><div><h1>Comparaison de lanes</h1><p>Comparez jusqu'à 4 lanes simultanément avec le même volume navire.</p></div></div>
+      <div class="card">
+        <label style="margin-bottom:12px;display:block">Lanes à comparer (2–4)</label>
+        <div class="compare-lanes-row" id="compareLanesRow"></div>
+        <button class="btn-add-lane" onclick="addCompareLane()" id="btnAddLane">+ Ajouter une lane</button>
+        <div class="form-group" style="margin-top:20px">
+          <label for="compareVolume">Volume navire commun</label>
+          <input type="number" id="compareVolume" placeholder="Ex: 4000" min="1" max="99999" step="1" style="max-width:280px">
+        </div>
+        <button class="btn-primary" onclick="runComparison()" style="max-width:280px">Comparer</button>
+        <div id="compareResult"></div>
+      </div>
+    </div>
+
+    <!-- ── Page: Full / Empty ── -->
+    <div class="page-panel" id="page-fm">
+      <div class="page-header">
+        <div>
+          <h1>Full / Empty</h1>
+          <p>Pipeline complet : <strong>Lane + Volume</strong> → Load/Discharge → Full/Empty par type de mouvement.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title-lg">Calculer D/L + F/M</h2>
+        <div class="form-row">
+          <div>
+            <label>Lane</label>
+            <div class="combobox" id="fmLaneCombobox">
+              <div class="combo-field" id="fmComboField" onclick="toggleComboFM()">
+                <span class="combo-dot" id="fmComboDot"></span>
+                <span class="combo-text" id="fmComboText">— Choisir —</span>
+                <svg class="combo-chevron" id="fmComboChevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="combo-dropdown" id="fmComboDropdown" style="display:none">
+                <div class="combo-search-wrap"><input type="text" id="fmComboSearch" class="combo-search" placeholder="Rechercher…" oninput="filterComboFM()" autocomplete="off" spellcheck="false"></div>
+                <div class="combo-list" id="fmComboList"></div>
+              </div>
+            </div>
+            <input type="hidden" id="fmSelectedLane">
+          </div>
+          <div>
+            <label for="fmVolumeInput">Volume navire</label>
+            <input type="number" id="fmVolumeInput" placeholder="Ex: 3500" min="1" max="99999" step="1">
+          </div>
+        </div>
+        <div class="or-divider">ou saisir manuellement</div>
+        <div class="form-group">
+          <label for="fmLaneText">Nom de la lane</label>
+          <input type="text" id="fmLaneText" placeholder="Ex: FAL1WB, EPIC…" oninput="onFMLaneText()" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="btn-primary" id="btnPredictFM" onclick="predictFM()">Calculer D/L + Full &amp; Empty</button>
+        <div id="resultFM"></div>
+      </div>
+
+      <!-- Batch F/M -->
+      <div class="card">
+        <div class="card-header-row">
+          <h2 class="card-title-lg">Import fichier — pipeline complet</h2>
+        </div>
+        <div class="drop-zone" id="dropZoneFM"
+             onclick="document.getElementById('fileInputFM').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDropFM(event)">
+          <div class="dz-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 8l4-4 4 4M4 17h16v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Glisser-déposer ou cliquer</div>
+          <div class="dz-sub">Excel / CSV · colonnes Lane + Volume · résultat : D, L, D-Full, D-Empty, L-Full, L-Empty</div>
+        </div>
+        <input type="file" id="fileInputFM" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFileFM(event)">
+        <div id="batchFMResult"></div>
+      </div>
+
+      <!-- Mise à jour ratios F/M -->
+      <div class="card">
+        <h2 class="card-title-lg">Mise à jour ratios Full / Empty</h2>
+        <div class="info-banner">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7v4M8 5.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Colonnes attendues : <code>Lane</code> · <code>D/L</code> · <code>F/M</code> · <code>Dis./Load/AS Completed Date</code>
+        </div>
+        <div id="fmUpdateStatus" class="update-status-bar update-status-none">
+          <span class="us-dot us-dot-none"></span>Chargement statut F/M…
+        </div>
+        <div class="drop-zone drop-zone-update" id="dropZoneFMUpdate"
+             onclick="document.getElementById('movesFileFMInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleFMMovesFileDrop(event)">
+          <div class="dz-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 8l4-4 4 4M4 17h16v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Glisser le fichier de moves</div>
+          <div class="dz-sub">Excel (.xlsx, .xls) — Lane + D/L + F/M + date</div>
+        </div>
+        <input type="file" id="movesFileFMInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleMovesFileFM(event)">
+        <div id="updateFMResult"></div>
+      </div>
+    </div>
+
+    <!-- ── Page: TEU ── -->
+    <div class="page-panel" id="page-teu">
+      <div class="page-header">
+        <div>
+          <h1>TEU Estimé</h1>
+          <p>Pipeline complet : <strong>Lane + Volume</strong> → Load/Discharge → Full/Empty → <strong>TEU</strong> (20' × 1 + 40' × 2).</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title-lg">Calculer D/L + F/M + TEU</h2>
+        <div class="form-row">
+          <div>
+            <label>Lane</label>
+            <div class="combobox" id="teuLaneCombobox">
+              <div class="combo-field" id="teuComboField" onclick="toggleComboTEU()">
+                <span class="combo-dot" id="teuComboDot"></span>
+                <span class="combo-text" id="teuComboText">— Choisir —</span>
+                <svg class="combo-chevron" id="teuComboChevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="combo-dropdown" id="teuComboDropdown" style="display:none">
+                <div class="combo-search-wrap"><input type="text" id="teuComboSearch" class="combo-search" placeholder="Rechercher…" oninput="filterComboTEU()" autocomplete="off" spellcheck="false"></div>
+                <div class="combo-list" id="teuComboList"></div>
+              </div>
+            </div>
+            <input type="hidden" id="teuSelectedLane">
+          </div>
+          <div>
+            <label for="teuVolumeInput">Volume navire</label>
+            <input type="number" id="teuVolumeInput" placeholder="Ex: 3500" min="1" max="99999" step="1">
+          </div>
+        </div>
+        <div class="or-divider">ou saisir manuellement</div>
+        <div class="form-group">
+          <label for="teuLaneText">Nom de la lane</label>
+          <input type="text" id="teuLaneText" placeholder="Ex: FAL1WB, EPIC…" oninput="onTEULaneText()" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="btn-primary" id="btnPredictTEU" onclick="predictTEU()">Calculer D/L + F/M + TEU</button>
+        <div id="resultTEU"></div>
+      </div>
+
+      <!-- Batch TEU -->
+      <div class="card">
+        <div class="card-header-row">
+          <h2 class="card-title-lg">Import fichier — pipeline TEU complet</h2>
+        </div>
+        <div class="drop-zone" id="dropZoneTEU"
+             onclick="document.getElementById('fileInputTEU').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleDropTEU(event)">
+          <div class="dz-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 8l4-4 4 4M4 17h16v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Glisser-déposer ou cliquer</div>
+          <div class="dz-sub">Excel / CSV · colonnes Lane + Volume · résultat : D, L, D-Full TEU, D-Empty TEU, L-Full TEU, L-Empty TEU</div>
+        </div>
+        <input type="file" id="fileInputTEU" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleFileTEU(event)">
+        <div id="batchTEUResult"></div>
+      </div>
+
+      <!-- Mise à jour ratios TEU -->
+      <div class="card">
+        <h2 class="card-title-lg">Mise à jour ratios TEU</h2>
+        <div class="info-banner">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7v4M8 5.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Colonnes attendues : <code>Lane</code> · <code>D/L</code> · <code>F/M</code> · <code>TEU</code> · <code>Dis./Load/AS Completed Date</code>
+        </div>
+        <div id="teuUpdateStatus" class="update-status-bar update-status-none">
+          <span class="us-dot us-dot-none"></span>Chargement statut TEU…
+        </div>
+        <div class="drop-zone drop-zone-update" id="dropZoneTEUUpdate"
+             onclick="document.getElementById('movesFileTEUInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleTEUMovesFileDrop(event)">
+          <div class="dz-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 8l4-4 4 4M4 17h16v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Glisser le fichier de moves</div>
+          <div class="dz-sub">Excel (.xlsx, .xls) — Lane + D/L + F/M + TEU + date</div>
+        </div>
+        <input type="file" id="movesFileTEUInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleMovesFileTEU(event)">
+        <div id="updateTEUResult"></div>
+      </div>
+    </div>
+
+    <!-- ── Page: Mise à jour ── -->
+    <div class="page-panel" id="page-update">
+      <div class="page-header"><div><h1>Mise à jour mensuelle</h1><p>Importez le fichier de moves mensuel pour recalculer les ratios L/D par lane.</p></div></div>
+      <div class="card">
+        <div class="info-banner">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.3"/><path d="M8 7v4M8 5.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Colonnes attendues : <code>Lane</code> · <code>D/L</code> · <code>Dis./Load/AS Completed Date</code>
+        </div>
+        <div id="updateStatus" class="update-status-bar">Chargement…</div>
+        <div class="drop-zone drop-zone-update" id="dropZoneUpdate"
+             onclick="document.getElementById('movesFileInput').click()"
+             ondragover="event.preventDefault();this.classList.add('drag-over')"
+             ondragleave="this.classList.remove('drag-over')"
+             ondrop="handleMovesFileDrop(event)">
+          <div class="dz-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3v12M8 8l4-4 4 4M4 17h16v1a2 2 0 01-2 2H6a2 2 0 01-2-2v-1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="dz-title">Glisser le fichier de moves ici</div>
+          <div class="dz-sub">Excel (.xlsx, .xls) — Lane + D/L + date</div>
+        </div>
+        <input type="file" id="movesFileInput" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleMovesFile(event)">
+        <div id="updateResult"></div>
+      </div>
+    </div>
+
+    <div class="main-footer">
+      Terminal L/D Predictor · <span id="lanesCount">—</span> lanes · <button class="link-btn" onclick="window.print()">Exporter PDF</button>
+    </div>
+  </main>
+</div>
+
+<div id="toastContainer"></div>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+{
+  "ACX": {
+    "last_date": "2025-12-13",
+    "period_start": "2025-09-13",
+    "discharge": {
+      "total_F": 22,
+      "total_M": 0,
+      "total": 22,
+      "pct_F": 100.0,
+      "pct_M": 0.0
+    },
+    "load": {
+      "total_F": 937,
+      "total_M": 14,
+      "total": 951,
+      "pct_F": 98.53,
+      "pct_M": 1.47
+    }
+  },
+  "AGAPNB": {
+    "last_date": "2025-12-26",
+    "period_start": "2025-09-26",
+    "discharge": {
+      "total_F": 2454,
+      "total_M": 2370,
+      "total": 4824,
+      "pct_F": 50.87,
+      "pct_M": 49.13
+    },
+    "load": {
+      "total_F": 4442,
+      "total_M": 33,
+      "total": 4475,
+      "pct_F": 99.26,
+      "pct_M": 0.74
+    }
+  },
+  "AGAPSB": {
+    "last_date": "2023-12-27",
+    "period_start": "2023-09-27",
+    "discharge": {
+      "total_F": 1026,
+      "total_M": 796,
+      "total": 1822,
+      "pct_F": 56.31,
+      "pct_M": 43.69
+    },
+    "load": {
+      "total_F": 1639,
+      "total_M": 105,
+      "total": 1744,
+      "pct_F": 93.98,
+      "pct_M": 6.02
+    }
+  },
+  "BIJAG": {
+    "last_date": "2025-12-24",
+    "period_start": "2025-09-24",
+    "discharge": {
+      "total_F": 501,
+      "total_M": 3078,
+      "total": 3579,
+      "pct_F": 14.0,
+      "pct_M": 86.0
+    },
+    "load": {
+      "total_F": 3903,
+      "total_M": 0,
+      "total": 3903,
+      "pct_F": 100.0,
+      "pct_M": 0.0
+    }
+  },
+  "BSMAR": {
+    "last_date": "2025-12-23",
+    "period_start": "2025-09-23",
+    "discharge": {
+      "total_F": 3969,
+      "total_M": 1836,
+      "total": 5805,
+      "pct_F": 68.37,
+      "pct_M": 31.63
+    },
+    "load": {
+      "total_F": 3749,
+      "total_M": 3753,
+      "total": 7502,
+      "pct_F": 49.97,
+      "pct_M": 50.03
+    }
+  },
+  "CJXSB": {
+    "last_date": "2024-06-11",
+    "period_start": "2024-03-11",
+    "discharge": {
+      "total_F": 3484,
+      "total_M": 0,
+      "total": 3484,
+      "pct_F": 100.0,
+      "pct_M": 0.0
+    },
+    "load": {
+      "total_F": 1793,
+      "total_M": 2,
+      "total": 1795,
+      "pct_F": 99.89,
+      "pct_M": 0.11
+    }
+  },
+  "EPIC": {
+    "last_date": "2025-12-28",
+    "period_start": "2025-09-28",
+    "discharge": {
+      "total_F": 13702,
+      "total_M": 120,
+      "total": 13822,
+      "pct_F": 99.13,
+      "pct_M": 0.87
+    },
+    "load": {
+      "total_F": 2521,
+      "total_M": 698,
+      "total": 3219,
+      "pct_F": 78.32,
+      "pct_M": 21.68
+    }
+  },
+  "ERF1NB": {
+    "last_date": "2023-08-04",
+    "period_start": "2023-05-04",
+    "discharge": {
+      "total_F": 130,
+      "total_M": 501,
+      "total": 631,
+      "pct_F": 20.6,
+      "pct_M": 79.4
+    },
+    "load": {
+      "total_F": 74,
+      "total_M": 77,
+      "total": 151,
+      "pct_F": 49.01,
+      "pct_M": 50.99
+    }
+  },
+  "ERF1SB": {
+    "last_date": "2025-12-31",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "total_F": 6013,
+      "total_M": 251,
+      "total": 6264,
+      "pct_F": 95.99,
+      "pct_M": 4.01
+    },
+    "load": {
+      "total_F": 8217,
+      "total_M": 152,
+      "total": 8369,
+      "pct_F": 98.18,
+      "pct_M": 1.82
+    }
+  },
+  "ERONAF": {
+    "last_date": "2023-12-30",
+    "period_start": "2023-09-30",
+    "discharge": {
+      "total_F": 2251,
+      "total_M": 450,
+      "total": 2701,
+      "pct_F": 83.34,
+      "pct_M": 16.66
+    },
+    "load": {
+      "total_F": 2328,
+      "total_M": 1,
+      "total": 2329,
+      "pct_F": 99.96,
+      "pct_M": 0.04
+    }
+  },
+  "EURAF2": {
+    "last_date": "2024-03-26",
+    "period_start": "2023-12-26",
+    "discharge": {
+      "total_F": 2085,
+      "total_M": 1746,
+      "total": 3831,
+      "pct_F": 54.42,
+      "pct_M": 45.58
+    },
+    "load": {
+      "total_F": 4406,
+      "total_M": 369,
+      "total": 4775,
+      "pct_F": 92.27,
+      "pct_M": 7.73
+    }
+  },
+  "EURAF3": {
+    "last_date": "2023-04-19",
+    "period_start": "2023-01-19",
+    "discharge": {
+      "total_F": 1255,
+      "total_M": 902,
+      "total": 2157,
+      "pct_F": 58.18,
+      "pct_M": 41.82
+    },
+    "load": {
+      "total_F": 4107,
+      "total_M": 452,
+      "total": 4559,
+      "pct_F": 90.09,
+      "pct_M": 9.91
+    }
+  },
+  "EURAF4": {
+    "last_date": "2025-12-26",
+    "period_start": "2025-09-26",
+    "discharge": {
+      "total_F": 5545,
+      "total_M": 467,
+      "total": 6012,
+      "pct_F": 92.23,
+      "pct_M": 7.77
+    },
+    "load": {
+      "total_F": 7475,
+      "total_M": 16,
+      "total": 7491,
+      "pct_F": 99.79,
+      "pct_M": 0.21
+    }
+  },
+  "EURAF5": {
+    "last_date": "2025-12-30",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "total_F": 3445,
+      "total_M": 7671,
+      "total": 11116,
+      "pct_F": 30.99,
+      "pct_M": 69.01
+    },
+    "load": {
+      "total_F": 9467,
+      "total_M": 1117,
+      "total": 10584,
+      "pct_F": 89.45,
+      "pct_M": 10.55
+    }
+  },
+  "EURO": {
+    "last_date": "2025-12-27",
+    "period_start": "2025-09-27",
+    "discharge": {
+      "total_F": 1809,
+      "total_M": 763,
+      "total": 2572,
+      "pct_F": 70.33,
+      "pct_M": 29.67
+    },
+    "load": {
+      "total_F": 1993,
+      "total_M": 536,
+      "total": 2529,
+      "pct_F": 78.81,
+      "pct_M": 21.19
+    }
+  },
+  "FAL1EB": {
+    "last_date": "2025-10-01",
+    "period_start": "2025-07-01",
+    "discharge": {
+      "total_F": 24,
+      "total_M": 67,
+      "total": 91,
+      "pct_F": 26.37,
+      "pct_M": 73.63
+    },
+    "load": {
+      "total_F": 46,
+      "total_M": 4087,
+      "total": 4133,
+      "pct_F": 1.11,
+      "pct_M": 98.89
+    }
+  },
+  "FAL1WB": {
+    "last_date": "2025-12-29",
+    "period_start": "2025-09-29",
+    "discharge": {
+      "total_F": 24942,
+      "total_M": 92,
+      "total": 25034,
+      "pct_F": 99.63,
+      "pct_M": 0.37
+    },
+    "load": {
+      "total_F": 5449,
+      "total_M": 6766,
+      "total": 12215,
+      "pct_F": 44.61,
+      "pct_M": 55.39
+    }
+  },
+  "FAL3EB": {
+    "last_date": "2025-12-16",
+    "period_start": "2025-09-16",
+    "discharge": {
+      "total_F": 4282,
+      "total_M": 456,
+      "total": 4738,
+      "pct_F": 90.38,
+      "pct_M": 9.62
+    },
+    "load": {
+      "total_F": 2788,
+      "total_M": 16436,
+      "total": 19224,
+      "pct_F": 14.5,
+      "pct_M": 85.5
+    }
+  },
+  "FAL3WB": {
+    "last_date": "2024-03-25",
+    "period_start": "2023-12-25",
+    "discharge": {
+      "total_F": 12473,
+      "total_M": 53,
+      "total": 12526,
+      "pct_F": 99.58,
+      "pct_M": 0.42
+    },
+    "load": {
+      "total_F": 4735,
+      "total_M": 56,
+      "total": 4791,
+      "pct_F": 98.83,
+      "pct_M": 1.17
+    }
+  },
+  "MEDCAR": {
+    "last_date": "2025-12-23",
+    "period_start": "2025-09-23",
+    "discharge": {
+      "total_F": 2713,
+      "total_M": 205,
+      "total": 2918,
+      "pct_F": 92.97,
+      "pct_M": 7.03
+    },
+    "load": {
+      "total_F": 6371,
+      "total_M": 1971,
+      "total": 8342,
+      "pct_F": 76.37,
+      "pct_M": 23.63
+    }
+  },
+  "MGULF": {
+    "last_date": "2024-08-26",
+    "period_start": "2024-05-26",
+    "discharge": {
+      "total_F": 1032,
+      "total_M": 304,
+      "total": 1336,
+      "pct_F": 77.25,
+      "pct_M": 22.75
+    },
+    "load": {
+      "total_F": 363,
+      "total_M": 536,
+      "total": 899,
+      "pct_F": 40.38,
+      "pct_M": 59.62
+    }
+  },
+  "MORO": {
+    "last_date": "2025-12-28",
+    "period_start": "2025-09-28",
+    "discharge": {
+      "total_F": 3424,
+      "total_M": 1290,
+      "total": 4714,
+      "pct_F": 72.63,
+      "pct_M": 27.37
+    },
+    "load": {
+      "total_F": 4506,
+      "total_M": 1551,
+      "total": 6057,
+      "pct_F": 74.39,
+      "pct_M": 25.61
+    }
+  },
+  "MWX": {
+    "last_date": "2025-12-25",
+    "period_start": "2025-09-25",
+    "discharge": {
+      "total_F": 2269,
+      "total_M": 4870,
+      "total": 7139,
+      "pct_F": 31.78,
+      "pct_M": 68.22
+    },
+    "load": {
+      "total_F": 6883,
+      "total_M": 3,
+      "total": 6886,
+      "pct_F": 99.96,
+      "pct_M": 0.04
+    }
+  },
+  "NCLE": {
+    "last_date": "2025-12-30",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "total_F": 15328,
+      "total_M": 405,
+      "total": 15733,
+      "pct_F": 97.43,
+      "pct_M": 2.57
+    },
+    "load": {
+      "total_F": 3749,
+      "total_M": 772,
+      "total": 4521,
+      "pct_F": 82.92,
+      "pct_M": 17.08
+    }
+  },
+  "NETU": {
+    "last_date": "2025-10-02",
+    "period_start": "2025-07-02",
+    "discharge": {
+      "total_F": 4968,
+      "total_M": 159,
+      "total": 5127,
+      "pct_F": 96.9,
+      "pct_M": 3.1
+    },
+    "load": {
+      "total_F": 305,
+      "total_M": 538,
+      "total": 843,
+      "pct_F": 36.18,
+      "pct_M": 63.82
+    }
+  },
+  "PGESB": {
+    "last_date": "2023-10-28",
+    "period_start": "2023-07-28",
+    "discharge": {
+      "total_F": 382,
+      "total_M": 1,
+      "total": 383,
+      "pct_F": 99.74,
+      "pct_M": 0.26
+    },
+    "load": {
+      "total_F": 30,
+      "total_M": 324,
+      "total": 354,
+      "pct_F": 8.47,
+      "pct_M": 91.53
+    }
+  },
+  "REDEX": {
+    "last_date": "2025-06-14",
+    "period_start": "2025-03-14",
+    "discharge": {
+      "total_F": 6262,
+      "total_M": 608,
+      "total": 6870,
+      "pct_F": 91.15,
+      "pct_M": 8.85
+    },
+    "load": {
+      "total_F": 849,
+      "total_M": 38,
+      "total": 887,
+      "pct_F": 95.72,
+      "pct_M": 4.28
+    }
+  },
+  "SFT1": {
+    "last_date": "2023-10-21",
+    "period_start": "2023-07-21",
+    "discharge": {
+      "total_F": 949,
+      "total_M": 0,
+      "total": 949,
+      "pct_F": 100.0,
+      "pct_M": 0.0
+    },
+    "load": {
+      "total_F": 949,
+      "total_M": 10,
+      "total": 959,
+      "pct_F": 98.96,
+      "pct_M": 1.04
+    }
+  },
+  "SFT3": {
+    "last_date": "2023-06-06",
+    "period_start": "2023-03-06",
+    "discharge": {
+      "total_F": 2478,
+      "total_M": 104,
+      "total": 2582,
+      "pct_F": 95.97,
+      "pct_M": 4.03
+    },
+    "load": {
+      "total_F": 2884,
+      "total_M": 1200,
+      "total": 4084,
+      "pct_F": 70.62,
+      "pct_M": 29.38
+    }
+  },
+  "SIRIUS": {
+    "last_date": "2025-12-27",
+    "period_start": "2025-09-27",
+    "discharge": {
+      "total_F": 3563,
+      "total_M": 179,
+      "total": 3742,
+      "pct_F": 95.22,
+      "pct_M": 4.78
+    },
+    "load": {
+      "total_F": 6817,
+      "total_M": 349,
+      "total": 7166,
+      "pct_F": 95.13,
+      "pct_M": 4.87
+    }
+  },
+  "TMP": {
+    "last_date": "2025-12-31",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "total_F": 3882,
+      "total_M": 1640,
+      "total": 5522,
+      "pct_F": 70.3,
+      "pct_M": 29.7
+    },
+    "load": {
+      "total_F": 3961,
+      "total_M": 2586,
+      "total": 6547,
+      "pct_F": 60.5,
+      "pct_M": 39.5
+    }
+  },
+  "WAZZ": {
+    "last_date": "2025-12-24",
+    "period_start": "2025-09-24",
+    "discharge": {
+      "total_F": 1550,
+      "total_M": 3992,
+      "total": 5542,
+      "pct_F": 27.97,
+      "pct_M": 72.03
+    },
+    "load": {
+      "total_F": 5872,
+      "total_M": 3,
+      "total": 5875,
+      "pct_F": 99.95,
+      "pct_M": 0.05
+    }
+  }
+}

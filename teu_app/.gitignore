@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Environnements virtuels
+venv/
+.venv/
+env/
+ENV/
+
+# Flask
+instance/
+.webassets-cache
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Fichiers de données volumineux
+*.csv
+*.xlsx
+*.xls
+# data/ est versionné (ratios.json, fm_ratios.json)
+# data/*.csv
+# data/*.xlsx
+
+# Modèles ML (optionnel - décommentez si vous ne voulez pas les pousser)
+# *.pkl
+# *.joblib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Variables d'environnement
+.env
+.env.local

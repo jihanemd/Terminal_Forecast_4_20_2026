@@ -1,0 +1,1218 @@
+{
+  "ACX": {
+    "last_date": "2025-12-13",
+    "period_start": "2025-09-13",
+    "discharge": {
+      "full": {
+        "containers": 22,
+        "teu_20": 0,
+        "teu_40": 22,
+        "teu_total": 44,
+        "pct_teu": 100.0
+      },
+      "empty": {
+        "containers": 0,
+        "teu_20": 0,
+        "teu_40": 0,
+        "teu_total": 0,
+        "pct_teu": 0.0
+      },
+      "total_teu": 44
+    },
+    "load": {
+      "full": {
+        "containers": 937,
+        "teu_20": 581,
+        "teu_40": 356,
+        "teu_total": 1293,
+        "pct_teu": 98.85
+      },
+      "empty": {
+        "containers": 14,
+        "teu_20": 13,
+        "teu_40": 1,
+        "teu_total": 15,
+        "pct_teu": 1.15
+      },
+      "total_teu": 1308
+    }
+  },
+  "AGAPNB": {
+    "last_date": "2025-12-26",
+    "period_start": "2025-09-26",
+    "discharge": {
+      "full": {
+        "containers": 2454,
+        "teu_20": 1079,
+        "teu_40": 1375,
+        "teu_total": 3829,
+        "pct_teu": 45.32
+      },
+      "empty": {
+        "containers": 2370,
+        "teu_20": 121,
+        "teu_40": 2249,
+        "teu_total": 4619,
+        "pct_teu": 54.68
+      },
+      "total_teu": 8448
+    },
+    "load": {
+      "full": {
+        "containers": 4442,
+        "teu_20": 1804,
+        "teu_40": 2638,
+        "teu_total": 7080,
+        "pct_teu": 99.52
+      },
+      "empty": {
+        "containers": 33,
+        "teu_20": 32,
+        "teu_40": 1,
+        "teu_total": 34,
+        "pct_teu": 0.48
+      },
+      "total_teu": 7114
+    }
+  },
+  "AGAPSB": {
+    "last_date": "2023-12-27",
+    "period_start": "2023-09-27",
+    "discharge": {
+      "full": {
+        "containers": 1026,
+        "teu_20": 347,
+        "teu_40": 679,
+        "teu_total": 1705,
+        "pct_teu": 54.06
+      },
+      "empty": {
+        "containers": 796,
+        "teu_20": 143,
+        "teu_40": 653,
+        "teu_total": 1449,
+        "pct_teu": 45.94
+      },
+      "total_teu": 3154
+    },
+    "load": {
+      "full": {
+        "containers": 1639,
+        "teu_20": 518,
+        "teu_40": 1121,
+        "teu_total": 2760,
+        "pct_teu": 93.09
+      },
+      "empty": {
+        "containers": 105,
+        "teu_20": 5,
+        "teu_40": 100,
+        "teu_total": 205,
+        "pct_teu": 6.91
+      },
+      "total_teu": 2965
+    }
+  },
+  "BIJAG": {
+    "last_date": "2025-12-24",
+    "period_start": "2025-09-24",
+    "discharge": {
+      "full": {
+        "containers": 501,
+        "teu_20": 365,
+        "teu_40": 136,
+        "teu_total": 637,
+        "pct_teu": 10.82
+      },
+      "empty": {
+        "containers": 3078,
+        "teu_20": 904,
+        "teu_40": 2174,
+        "teu_total": 5252,
+        "pct_teu": 89.18
+      },
+      "total_teu": 5889
+    },
+    "load": {
+      "full": {
+        "containers": 3903,
+        "teu_20": 1411,
+        "teu_40": 2492,
+        "teu_total": 6395,
+        "pct_teu": 100.0
+      },
+      "empty": {
+        "containers": 0,
+        "teu_20": 0,
+        "teu_40": 0,
+        "teu_total": 0,
+        "pct_teu": 0.0
+      },
+      "total_teu": 6395
+    }
+  },
+  "BSMAR": {
+    "last_date": "2025-12-23",
+    "period_start": "2025-09-23",
+    "discharge": {
+      "full": {
+        "containers": 3969,
+        "teu_20": 2254,
+        "teu_40": 1715,
+        "teu_total": 5684,
+        "pct_teu": 64.27
+      },
+      "empty": {
+        "containers": 1836,
+        "teu_20": 512,
+        "teu_40": 1324,
+        "teu_total": 3160,
+        "pct_teu": 35.73
+      },
+      "total_teu": 8844
+    },
+    "load": {
+      "full": {
+        "containers": 3749,
+        "teu_20": 1755,
+        "teu_40": 1994,
+        "teu_total": 5743,
+        "pct_teu": 54.7
+      },
+      "empty": {
+        "containers": 3753,
+        "teu_20": 2749,
+        "teu_40": 1004,
+        "teu_total": 4757,
+        "pct_teu": 45.3
+      },
+      "total_teu": 10500
+    }
+  },
+  "CJXSB": {
+    "last_date": "2024-06-11",
+    "period_start": "2024-03-11",
+    "discharge": {
+      "full": {
+        "containers": 3484,
+        "teu_20": 1449,
+        "teu_40": 2035,
+        "teu_total": 5519,
+        "pct_teu": 100.0
+      },
+      "empty": {
+        "containers": 0,
+        "teu_20": 0,
+        "teu_40": 0,
+        "teu_total": 0,
+        "pct_teu": 0.0
+      },
+      "total_teu": 5519
+    },
+    "load": {
+      "full": {
+        "containers": 1793,
+        "teu_20": 143,
+        "teu_40": 1650,
+        "teu_total": 3443,
+        "pct_teu": 99.94
+      },
+      "empty": {
+        "containers": 2,
+        "teu_20": 2,
+        "teu_40": 0,
+        "teu_total": 2,
+        "pct_teu": 0.06
+      },
+      "total_teu": 3445
+    }
+  },
+  "EPIC": {
+    "last_date": "2025-12-28",
+    "period_start": "2025-09-28",
+    "discharge": {
+      "full": {
+        "containers": 13702,
+        "teu_20": 5931,
+        "teu_40": 7771,
+        "teu_total": 21473,
+        "pct_teu": 98.89
+      },
+      "empty": {
+        "containers": 120,
+        "teu_20": 0,
+        "teu_40": 120,
+        "teu_total": 240,
+        "pct_teu": 1.11
+      },
+      "total_teu": 21713
+    },
+    "load": {
+      "full": {
+        "containers": 2521,
+        "teu_20": 1250,
+        "teu_40": 1271,
+        "teu_total": 3792,
+        "pct_teu": 75.09
+      },
+      "empty": {
+        "containers": 698,
+        "teu_20": 138,
+        "teu_40": 560,
+        "teu_total": 1258,
+        "pct_teu": 24.91
+      },
+      "total_teu": 5050
+    }
+  },
+  "ERF1NB": {
+    "last_date": "2023-08-04",
+    "period_start": "2023-05-04",
+    "discharge": {
+      "full": {
+        "containers": 130,
+        "teu_20": 113,
+        "teu_40": 17,
+        "teu_total": 147,
+        "pct_teu": 12.89
+      },
+      "empty": {
+        "containers": 501,
+        "teu_20": 9,
+        "teu_40": 492,
+        "teu_total": 993,
+        "pct_teu": 87.11
+      },
+      "total_teu": 1140
+    },
+    "load": {
+      "full": {
+        "containers": 74,
+        "teu_20": 4,
+        "teu_40": 70,
+        "teu_total": 144,
+        "pct_teu": 48.32
+      },
+      "empty": {
+        "containers": 77,
+        "teu_20": 0,
+        "teu_40": 77,
+        "teu_total": 154,
+        "pct_teu": 51.68
+      },
+      "total_teu": 298
+    }
+  },
+  "ERF1SB": {
+    "last_date": "2025-12-31",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "full": {
+        "containers": 6013,
+        "teu_20": 1952,
+        "teu_40": 4061,
+        "teu_total": 10074,
+        "pct_teu": 95.29
+      },
+      "empty": {
+        "containers": 251,
+        "teu_20": 4,
+        "teu_40": 247,
+        "teu_total": 498,
+        "pct_teu": 4.71
+      },
+      "total_teu": 10572
+    },
+    "load": {
+      "full": {
+        "containers": 8217,
+        "teu_20": 3614,
+        "teu_40": 4603,
+        "teu_total": 12820,
+        "pct_teu": 97.68
+      },
+      "empty": {
+        "containers": 152,
+        "teu_20": 0,
+        "teu_40": 152,
+        "teu_total": 304,
+        "pct_teu": 2.32
+      },
+      "total_teu": 13124
+    }
+  },
+  "ERONAF": {
+    "last_date": "2023-12-30",
+    "period_start": "2023-09-30",
+    "discharge": {
+      "full": {
+        "containers": 2251,
+        "teu_20": 913,
+        "teu_40": 1338,
+        "teu_total": 3589,
+        "pct_teu": 83.19
+      },
+      "empty": {
+        "containers": 450,
+        "teu_20": 175,
+        "teu_40": 275,
+        "teu_total": 725,
+        "pct_teu": 16.81
+      },
+      "total_teu": 4314
+    },
+    "load": {
+      "full": {
+        "containers": 2328,
+        "teu_20": 460,
+        "teu_40": 1868,
+        "teu_total": 4196,
+        "pct_teu": 99.95
+      },
+      "empty": {
+        "containers": 1,
+        "teu_20": 0,
+        "teu_40": 1,
+        "teu_total": 2,
+        "pct_teu": 0.05
+      },
+      "total_teu": 4198
+    }
+  },
+  "EURAF2": {
+    "last_date": "2024-03-26",
+    "period_start": "2023-12-26",
+    "discharge": {
+      "full": {
+        "containers": 2085,
+        "teu_20": 1036,
+        "teu_40": 1049,
+        "teu_total": 3134,
+        "pct_teu": 50.04
+      },
+      "empty": {
+        "containers": 1746,
+        "teu_20": 363,
+        "teu_40": 1383,
+        "teu_total": 3129,
+        "pct_teu": 49.96
+      },
+      "total_teu": 6263
+    },
+    "load": {
+      "full": {
+        "containers": 4406,
+        "teu_20": 1699,
+        "teu_40": 2707,
+        "teu_total": 7113,
+        "pct_teu": 94.8
+      },
+      "empty": {
+        "containers": 369,
+        "teu_20": 348,
+        "teu_40": 21,
+        "teu_total": 390,
+        "pct_teu": 5.2
+      },
+      "total_teu": 7503
+    }
+  },
+  "EURAF3": {
+    "last_date": "2023-04-19",
+    "period_start": "2023-01-19",
+    "discharge": {
+      "full": {
+        "containers": 1255,
+        "teu_20": 592,
+        "teu_40": 663,
+        "teu_total": 1918,
+        "pct_teu": 58.58
+      },
+      "empty": {
+        "containers": 902,
+        "teu_20": 448,
+        "teu_40": 454,
+        "teu_total": 1356,
+        "pct_teu": 41.42
+      },
+      "total_teu": 3274
+    },
+    "load": {
+      "full": {
+        "containers": 4107,
+        "teu_20": 2595,
+        "teu_40": 1512,
+        "teu_total": 5619,
+        "pct_teu": 89.57
+      },
+      "empty": {
+        "containers": 452,
+        "teu_20": 250,
+        "teu_40": 202,
+        "teu_total": 654,
+        "pct_teu": 10.43
+      },
+      "total_teu": 6273
+    }
+  },
+  "EURAF4": {
+    "last_date": "2025-12-26",
+    "period_start": "2025-09-26",
+    "discharge": {
+      "full": {
+        "containers": 5545,
+        "teu_20": 2779,
+        "teu_40": 2766,
+        "teu_total": 8311,
+        "pct_teu": 91.64
+      },
+      "empty": {
+        "containers": 467,
+        "teu_20": 176,
+        "teu_40": 291,
+        "teu_total": 758,
+        "pct_teu": 8.36
+      },
+      "total_teu": 9069
+    },
+    "load": {
+      "full": {
+        "containers": 7475,
+        "teu_20": 3538,
+        "teu_40": 3937,
+        "teu_total": 11412,
+        "pct_teu": 99.74
+      },
+      "empty": {
+        "containers": 16,
+        "teu_20": 2,
+        "teu_40": 14,
+        "teu_total": 30,
+        "pct_teu": 0.26
+      },
+      "total_teu": 11442
+    }
+  },
+  "EURAF5": {
+    "last_date": "2025-12-30",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "full": {
+        "containers": 3445,
+        "teu_20": 1744,
+        "teu_40": 1701,
+        "teu_total": 5146,
+        "pct_teu": 27.31
+      },
+      "empty": {
+        "containers": 7671,
+        "teu_20": 1647,
+        "teu_40": 6024,
+        "teu_total": 13695,
+        "pct_teu": 72.69
+      },
+      "total_teu": 18841
+    },
+    "load": {
+      "full": {
+        "containers": 9467,
+        "teu_20": 3926,
+        "teu_40": 5541,
+        "teu_total": 15008,
+        "pct_teu": 92.44
+      },
+      "empty": {
+        "containers": 1117,
+        "teu_20": 1007,
+        "teu_40": 110,
+        "teu_total": 1227,
+        "pct_teu": 7.56
+      },
+      "total_teu": 16235
+    }
+  },
+  "EURO": {
+    "last_date": "2025-12-27",
+    "period_start": "2025-09-27",
+    "discharge": {
+      "full": {
+        "containers": 1809,
+        "teu_20": 362,
+        "teu_40": 1447,
+        "teu_total": 3256,
+        "pct_teu": 71.8
+      },
+      "empty": {
+        "containers": 763,
+        "teu_20": 247,
+        "teu_40": 516,
+        "teu_total": 1279,
+        "pct_teu": 28.2
+      },
+      "total_teu": 4535
+    },
+    "load": {
+      "full": {
+        "containers": 1993,
+        "teu_20": 864,
+        "teu_40": 1129,
+        "teu_total": 3122,
+        "pct_teu": 75.1
+      },
+      "empty": {
+        "containers": 536,
+        "teu_20": 37,
+        "teu_40": 499,
+        "teu_total": 1035,
+        "pct_teu": 24.9
+      },
+      "total_teu": 4157
+    }
+  },
+  "FAL1EB": {
+    "last_date": "2025-10-01",
+    "period_start": "2025-07-01",
+    "discharge": {
+      "full": {
+        "containers": 24,
+        "teu_20": 10,
+        "teu_40": 14,
+        "teu_total": 38,
+        "pct_teu": 22.09
+      },
+      "empty": {
+        "containers": 67,
+        "teu_20": 0,
+        "teu_40": 67,
+        "teu_total": 134,
+        "pct_teu": 77.91
+      },
+      "total_teu": 172
+    },
+    "load": {
+      "full": {
+        "containers": 46,
+        "teu_20": 34,
+        "teu_40": 12,
+        "teu_total": 58,
+        "pct_teu": 0.88
+      },
+      "empty": {
+        "containers": 4087,
+        "teu_20": 1640,
+        "teu_40": 2447,
+        "teu_total": 6534,
+        "pct_teu": 99.12
+      },
+      "total_teu": 6592
+    }
+  },
+  "FAL1WB": {
+    "last_date": "2025-12-29",
+    "period_start": "2025-09-29",
+    "discharge": {
+      "full": {
+        "containers": 24942,
+        "teu_20": 6624,
+        "teu_40": 18318,
+        "teu_total": 43260,
+        "pct_teu": 99.66
+      },
+      "empty": {
+        "containers": 92,
+        "teu_20": 38,
+        "teu_40": 54,
+        "teu_total": 146,
+        "pct_teu": 0.34
+      },
+      "total_teu": 43406
+    },
+    "load": {
+      "full": {
+        "containers": 5449,
+        "teu_20": 408,
+        "teu_40": 5041,
+        "teu_total": 10490,
+        "pct_teu": 44.48
+      },
+      "empty": {
+        "containers": 6766,
+        "teu_20": 438,
+        "teu_40": 6328,
+        "teu_total": 13094,
+        "pct_teu": 55.52
+      },
+      "total_teu": 23584
+    }
+  },
+  "FAL3EB": {
+    "last_date": "2025-12-16",
+    "period_start": "2025-09-16",
+    "discharge": {
+      "full": {
+        "containers": 4282,
+        "teu_20": 1463,
+        "teu_40": 2819,
+        "teu_total": 7101,
+        "pct_teu": 88.84
+      },
+      "empty": {
+        "containers": 456,
+        "teu_20": 20,
+        "teu_40": 436,
+        "teu_total": 892,
+        "pct_teu": 11.16
+      },
+      "total_teu": 7993
+    },
+    "load": {
+      "full": {
+        "containers": 2788,
+        "teu_20": 2194,
+        "teu_40": 594,
+        "teu_total": 3382,
+        "pct_teu": 9.85
+      },
+      "empty": {
+        "containers": 16436,
+        "teu_20": 1908,
+        "teu_40": 14528,
+        "teu_total": 30964,
+        "pct_teu": 90.15
+      },
+      "total_teu": 34346
+    }
+  },
+  "FAL3WB": {
+    "last_date": "2024-03-25",
+    "period_start": "2023-12-25",
+    "discharge": {
+      "full": {
+        "containers": 12473,
+        "teu_20": 3483,
+        "teu_40": 8990,
+        "teu_total": 21463,
+        "pct_teu": 99.52
+      },
+      "empty": {
+        "containers": 53,
+        "teu_20": 3,
+        "teu_40": 50,
+        "teu_total": 103,
+        "pct_teu": 0.48
+      },
+      "total_teu": 21566
+    },
+    "load": {
+      "full": {
+        "containers": 4735,
+        "teu_20": 391,
+        "teu_40": 4344,
+        "teu_total": 9079,
+        "pct_teu": 98.88
+      },
+      "empty": {
+        "containers": 56,
+        "teu_20": 9,
+        "teu_40": 47,
+        "teu_total": 103,
+        "pct_teu": 1.12
+      },
+      "total_teu": 9182
+    }
+  },
+  "MEDCAR": {
+    "last_date": "2025-12-23",
+    "period_start": "2025-09-23",
+    "discharge": {
+      "full": {
+        "containers": 2713,
+        "teu_20": 1107,
+        "teu_40": 1606,
+        "teu_total": 4319,
+        "pct_teu": 91.91
+      },
+      "empty": {
+        "containers": 205,
+        "teu_20": 30,
+        "teu_40": 175,
+        "teu_total": 380,
+        "pct_teu": 8.09
+      },
+      "total_teu": 4699
+    },
+    "load": {
+      "full": {
+        "containers": 6371,
+        "teu_20": 2717,
+        "teu_40": 3654,
+        "teu_total": 10025,
+        "pct_teu": 71.78
+      },
+      "empty": {
+        "containers": 1971,
+        "teu_20": 0,
+        "teu_40": 1971,
+        "teu_total": 3942,
+        "pct_teu": 28.22
+      },
+      "total_teu": 13967
+    }
+  },
+  "MGULF": {
+    "last_date": "2024-08-26",
+    "period_start": "2024-05-26",
+    "discharge": {
+      "full": {
+        "containers": 1032,
+        "teu_20": 125,
+        "teu_40": 907,
+        "teu_total": 1939,
+        "pct_teu": 81.37
+      },
+      "empty": {
+        "containers": 304,
+        "teu_20": 164,
+        "teu_40": 140,
+        "teu_total": 444,
+        "pct_teu": 18.63
+      },
+      "total_teu": 2383
+    },
+    "load": {
+      "full": {
+        "containers": 363,
+        "teu_20": 155,
+        "teu_40": 208,
+        "teu_total": 571,
+        "pct_teu": 38.98
+      },
+      "empty": {
+        "containers": 536,
+        "teu_20": 178,
+        "teu_40": 358,
+        "teu_total": 894,
+        "pct_teu": 61.02
+      },
+      "total_teu": 1465
+    }
+  },
+  "MORO": {
+    "last_date": "2025-12-28",
+    "period_start": "2025-09-28",
+    "discharge": {
+      "full": {
+        "containers": 3424,
+        "teu_20": 1462,
+        "teu_40": 1962,
+        "teu_total": 5386,
+        "pct_teu": 69.34
+      },
+      "empty": {
+        "containers": 1290,
+        "teu_20": 199,
+        "teu_40": 1091,
+        "teu_total": 2381,
+        "pct_teu": 30.66
+      },
+      "total_teu": 7767
+    },
+    "load": {
+      "full": {
+        "containers": 4506,
+        "teu_20": 2313,
+        "teu_40": 2193,
+        "teu_total": 6699,
+        "pct_teu": 74.2
+      },
+      "empty": {
+        "containers": 1551,
+        "teu_20": 773,
+        "teu_40": 778,
+        "teu_total": 2329,
+        "pct_teu": 25.8
+      },
+      "total_teu": 9028
+    }
+  },
+  "MWX": {
+    "last_date": "2025-12-25",
+    "period_start": "2025-09-25",
+    "discharge": {
+      "full": {
+        "containers": 2269,
+        "teu_20": 1368,
+        "teu_40": 901,
+        "teu_total": 3170,
+        "pct_teu": 27.62
+      },
+      "empty": {
+        "containers": 4870,
+        "teu_20": 1431,
+        "teu_40": 3439,
+        "teu_total": 8309,
+        "pct_teu": 72.38
+      },
+      "total_teu": 11479
+    },
+    "load": {
+      "full": {
+        "containers": 6883,
+        "teu_20": 2040,
+        "teu_40": 4843,
+        "teu_total": 11726,
+        "pct_teu": 99.95
+      },
+      "empty": {
+        "containers": 3,
+        "teu_20": 0,
+        "teu_40": 3,
+        "teu_total": 6,
+        "pct_teu": 0.05
+      },
+      "total_teu": 11732
+    }
+  },
+  "NCLE": {
+    "last_date": "2025-12-30",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "full": {
+        "containers": 15328,
+        "teu_20": 7530,
+        "teu_40": 7798,
+        "teu_total": 23126,
+        "pct_teu": 96.63
+      },
+      "empty": {
+        "containers": 405,
+        "teu_20": 4,
+        "teu_40": 401,
+        "teu_total": 806,
+        "pct_teu": 3.37
+      },
+      "total_teu": 23932
+    },
+    "load": {
+      "full": {
+        "containers": 3749,
+        "teu_20": 1841,
+        "teu_40": 1908,
+        "teu_total": 5657,
+        "pct_teu": 84.02
+      },
+      "empty": {
+        "containers": 772,
+        "teu_20": 468,
+        "teu_40": 304,
+        "teu_total": 1076,
+        "pct_teu": 15.98
+      },
+      "total_teu": 6733
+    }
+  },
+  "NETU": {
+    "last_date": "2025-10-02",
+    "period_start": "2025-07-02",
+    "discharge": {
+      "full": {
+        "containers": 4968,
+        "teu_20": 2356,
+        "teu_40": 2612,
+        "teu_total": 7580,
+        "pct_teu": 96.44
+      },
+      "empty": {
+        "containers": 159,
+        "teu_20": 38,
+        "teu_40": 121,
+        "teu_total": 280,
+        "pct_teu": 3.56
+      },
+      "total_teu": 7860
+    },
+    "load": {
+      "full": {
+        "containers": 305,
+        "teu_20": 119,
+        "teu_40": 186,
+        "teu_total": 491,
+        "pct_teu": 35.94
+      },
+      "empty": {
+        "containers": 538,
+        "teu_20": 201,
+        "teu_40": 337,
+        "teu_total": 875,
+        "pct_teu": 64.06
+      },
+      "total_teu": 1366
+    }
+  },
+  "PGESB": {
+    "last_date": "2023-10-28",
+    "period_start": "2023-07-28",
+    "discharge": {
+      "full": {
+        "containers": 382,
+        "teu_20": 2,
+        "teu_40": 380,
+        "teu_total": 762,
+        "pct_teu": 99.74
+      },
+      "empty": {
+        "containers": 1,
+        "teu_20": 0,
+        "teu_40": 1,
+        "teu_total": 2,
+        "pct_teu": 0.26
+      },
+      "total_teu": 764
+    },
+    "load": {
+      "full": {
+        "containers": 30,
+        "teu_20": 14,
+        "teu_40": 16,
+        "teu_total": 46,
+        "pct_teu": 9.98
+      },
+      "empty": {
+        "containers": 324,
+        "teu_20": 233,
+        "teu_40": 91,
+        "teu_total": 415,
+        "pct_teu": 90.02
+      },
+      "total_teu": 461
+    }
+  },
+  "REDEX": {
+    "last_date": "2025-06-14",
+    "period_start": "2025-03-14",
+    "discharge": {
+      "full": {
+        "containers": 6262,
+        "teu_20": 3403,
+        "teu_40": 2859,
+        "teu_total": 9121,
+        "pct_teu": 88.26
+      },
+      "empty": {
+        "containers": 608,
+        "teu_20": 3,
+        "teu_40": 605,
+        "teu_total": 1213,
+        "pct_teu": 11.74
+      },
+      "total_teu": 10334
+    },
+    "load": {
+      "full": {
+        "containers": 849,
+        "teu_20": 300,
+        "teu_40": 549,
+        "teu_total": 1398,
+        "pct_teu": 94.91
+      },
+      "empty": {
+        "containers": 38,
+        "teu_20": 1,
+        "teu_40": 37,
+        "teu_total": 75,
+        "pct_teu": 5.09
+      },
+      "total_teu": 1473
+    }
+  },
+  "SFT1": {
+    "last_date": "2023-10-21",
+    "period_start": "2023-07-21",
+    "discharge": {
+      "full": {
+        "containers": 948,
+        "teu_20": 412,
+        "teu_40": 536,
+        "teu_total": 1484,
+        "pct_teu": 100.0
+      },
+      "empty": {
+        "containers": 0,
+        "teu_20": 0,
+        "teu_40": 0,
+        "teu_total": 0,
+        "pct_teu": 0.0
+      },
+      "total_teu": 1484
+    },
+    "load": {
+      "full": {
+        "containers": 949,
+        "teu_20": 412,
+        "teu_40": 537,
+        "teu_total": 1486,
+        "pct_teu": 98.67
+      },
+      "empty": {
+        "containers": 10,
+        "teu_20": 0,
+        "teu_40": 10,
+        "teu_total": 20,
+        "pct_teu": 1.33
+      },
+      "total_teu": 1506
+    }
+  },
+  "SFT3": {
+    "last_date": "2023-06-06",
+    "period_start": "2023-03-06",
+    "discharge": {
+      "full": {
+        "containers": 2478,
+        "teu_20": 352,
+        "teu_40": 2126,
+        "teu_total": 4604,
+        "pct_teu": 95.74
+      },
+      "empty": {
+        "containers": 104,
+        "teu_20": 3,
+        "teu_40": 101,
+        "teu_total": 205,
+        "pct_teu": 4.26
+      },
+      "total_teu": 4809
+    },
+    "load": {
+      "full": {
+        "containers": 2884,
+        "teu_20": 1108,
+        "teu_40": 1776,
+        "teu_total": 4660,
+        "pct_teu": 79.52
+      },
+      "empty": {
+        "containers": 1200,
+        "teu_20": 1200,
+        "teu_40": 0,
+        "teu_total": 1200,
+        "pct_teu": 20.48
+      },
+      "total_teu": 5860
+    }
+  },
+  "SIRIUS": {
+    "last_date": "2025-12-27",
+    "period_start": "2025-09-27",
+    "discharge": {
+      "full": {
+        "containers": 3563,
+        "teu_20": 705,
+        "teu_40": 2858,
+        "teu_total": 6421,
+        "pct_teu": 94.9
+      },
+      "empty": {
+        "containers": 179,
+        "teu_20": 13,
+        "teu_40": 166,
+        "teu_total": 345,
+        "pct_teu": 5.1
+      },
+      "total_teu": 6766
+    },
+    "load": {
+      "full": {
+        "containers": 6817,
+        "teu_20": 1778,
+        "teu_40": 5039,
+        "teu_total": 11856,
+        "pct_teu": 94.46
+      },
+      "empty": {
+        "containers": 349,
+        "teu_20": 2,
+        "teu_40": 347,
+        "teu_total": 696,
+        "pct_teu": 5.54
+      },
+      "total_teu": 12552
+    }
+  },
+  "TMP": {
+    "last_date": "2025-12-31",
+    "period_start": "2025-09-30",
+    "discharge": {
+      "full": {
+        "containers": 3882,
+        "teu_20": 1721,
+        "teu_40": 2161,
+        "teu_total": 6043,
+        "pct_teu": 68.67
+      },
+      "empty": {
+        "containers": 1640,
+        "teu_20": 523,
+        "teu_40": 1117,
+        "teu_total": 2757,
+        "pct_teu": 31.33
+      },
+      "total_teu": 8800
+    },
+    "load": {
+      "full": {
+        "containers": 3961,
+        "teu_20": 1178,
+        "teu_40": 2783,
+        "teu_total": 6744,
+        "pct_teu": 70.6
+      },
+      "empty": {
+        "containers": 2586,
+        "teu_20": 2364,
+        "teu_40": 222,
+        "teu_total": 2808,
+        "pct_teu": 29.4
+      },
+      "total_teu": 9552
+    }
+  },
+  "WAZZ": {
+    "last_date": "2025-12-24",
+    "period_start": "2025-09-24",
+    "discharge": {
+      "full": {
+        "containers": 1550,
+        "teu_20": 496,
+        "teu_40": 1054,
+        "teu_total": 2604,
+        "pct_teu": 28.39
+      },
+      "empty": {
+        "containers": 3992,
+        "teu_20": 1416,
+        "teu_40": 2576,
+        "teu_total": 6568,
+        "pct_teu": 71.61
+      },
+      "total_teu": 9172
+    },
+    "load": {
+      "full": {
+        "containers": 5872,
+        "teu_20": 2014,
+        "teu_40": 3858,
+        "teu_total": 9730,
+        "pct_teu": 99.95
+      },
+      "empty": {
+        "containers": 3,
+        "teu_20": 1,
+        "teu_40": 2,
+        "teu_total": 5,
+        "pct_teu": 0.05
+      },
+      "total_teu": 9735
+    }
+  }
+}
