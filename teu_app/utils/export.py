@@ -280,21 +280,6 @@ def export_teu_to_excel(results: list) -> io.BytesIO:
     teu_amber_fill = PatternFill("solid", fgColor="FEF3C7")   # D-Empty TEU
     total_fill     = PatternFill("solid", fgColor="EDE9FE")   # Total TEU
 
-    ws.merge_cells("A1:M1")
-    t = ws["A1"]
-    t.value = f"Terminal Predictor — D/L + F/M + TEU — Export du {date.today().strftime('%d/%m/%Y')}"
-    t.font  = Font(bold=True, size=13, color="111928", name="Calibri")
-    t.alignment = Alignment(horizontal="left", vertical="center")
-    ws.row_dimensions[1].height = 28
-
-    ws.merge_cells("A2:M2")
-    s = ws["A2"]
-    s.value = "Pipeline : Volume → D/L → Full/Empty (containers) → TEU (20': ×1 · 40': ×2)"
-    s.font  = Font(size=10, color="6B7280", name="Calibri")
-    s.alignment = Alignment(horizontal="left", vertical="center")
-    ws.row_dimensions[2].height = 18
-    ws.row_dimensions[3].height = 8
-
     headers = [
         "Lane", "Volume",
         "Discharge", "Load",
@@ -302,11 +287,17 @@ def export_teu_to_excel(results: list) -> io.BytesIO:
         "D-Full TEU", "D-Empty TEU", "L-Full TEU", "L-Empty TEU",
         "Total TEU"
     ]
+    WHITE_HEADER_FILL = PatternFill("solid", fgColor="FFFFFF")
     for col, h in enumerate(headers, start=1):
-        _header_style(ws.cell(row=4, column=col), h)
-    ws.row_dimensions[4].height = 22
+        cell = ws.cell(row=1, column=col)
+        cell.value = h
+        cell.font = Font(bold=True, size=10, color="111928", name="Calibri")
+        cell.fill = WHITE_HEADER_FILL
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+    ws.row_dimensions[1].height = 22
 
-    for row_idx, res in enumerate(results, start=5):
+    for row_idx, res in enumerate(results, start=2):
         unknown  = res.get("unknown", False)
         outdated = res.get("outdated", False)
         fm_ok    = res.get("fm_available", False)
@@ -374,8 +365,163 @@ def export_teu_to_excel(results: list) -> io.BytesIO:
     for i, w in enumerate([10, 10, 12, 12, 10, 10, 10, 10, 12, 13, 12, 13, 12], start=1):
         ws.column_dimensions[get_column_letter(i)].width = w
 
-    ws.freeze_panes = "A5"
+    ws.freeze_panes = "A2"
     buffer = io.BytesIO()
     wb.save(buffer)
     buffer.seek(0)
     return buffer
+
+
+def export_teu_summary_to_excel(result: dict) -> io.BytesIO:
+    """
+    Export TEU synthèse (lane unique) dans le format hiérarchique Excel :
+      L1 : Service | Date | Forecast Volume | Discharge (×3) | Load (×3)
+      L2 :                                  | Total D         | Total L
+      L3 :                                  | Full|Empty|Reefer | Full|Empty|Reefer
+      L4 :                                  | containers counts
+      L5 :                                  | TEU | TEU | TEU | TEU | TEU | TEU
+      L6 : BSMAR | date | volume            | TEU values
+    """
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Synthèse TEU"
+
+    DARK_NAVY  = PatternFill("solid", fgColor="132954")
+    MED_BLUE   = PatternFill("solid", fgColor="2563EB")
+    LIGHT_BLUE = PatternFill("solid", fgColor="DBEAFE")
+    TOTAL_FILL = PatternFill("solid", fgColor="EEF4FF")
+    LEFT_FILL  = PatternFill("solid", fgColor="EBF0FA")
+    WHITE_FILL = PatternFill("solid", fgColor="FFFFFF")
+    DATA_FILL  = PatternFill("solid", fgColor="F0F7FF")
+
+    def _navy(cell, text):
+        cell.value = text
+        cell.font = Font(bold=True, color="FFFFFF", size=12, name="Calibri")
+        cell.fill = DARK_NAVY
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+
+    def _med_blue(cell, text):
+        cell.value = text
+        cell.font = Font(bold=True, color="FFFFFF", size=11, name="Calibri")
+        cell.fill = MED_BLUE
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+
+    def _total(cell, val):
+        cell.value = val if val is not None else 0
+        cell.font = Font(bold=True, color="1A56DB", size=16, name="Calibri")
+        cell.fill = TOTAL_FILL
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+        cell.number_format = "#,##0"
+
+    def _cntr(cell, val):
+        if val is None:
+            cell.value = "-"
+            cell.font = Font(color="9CA3AF", size=12, name="Calibri")
+        else:
+            cell.value = val
+            cell.font = Font(bold=True, size=13, name="Calibri")
+            cell.number_format = "#,##0"
+        cell.fill = WHITE_FILL
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+
+    def _teu_lbl(cell):
+        cell.value = "TEU"
+        cell.font = Font(bold=True, color="1D4ED8", size=10, name="Calibri")
+        cell.fill = LIGHT_BLUE
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+
+    def _teu_val(cell, val):
+        if val is None:
+            cell.value = "-"
+            cell.font = Font(color="9CA3AF", size=12, name="Calibri")
+        else:
+            cell.value = val
+            cell.font = Font(bold=True, size=13, name="Calibri")
+            cell.number_format = "#,##0"
+        cell.fill = DATA_FILL
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+
+    def _left_label(cell, text):
+        cell.value = text
+        cell.font = Font(bold=True, size=11, color="374151", name="Calibri")
+        cell.fill = LEFT_FILL
+        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        cell.border = THIN_BORDER
+
+    def _left_data(cell, val, bold=False, fmt=None):
+        cell.value = val
+        cell.font = Font(bold=bold, size=11, name="Calibri")
+        cell.fill = WHITE_FILL
+        cell.alignment = Alignment(horizontal="center", vertical="center")
+        cell.border = THIN_BORDER
+        if fmt:
+            cell.number_format = fmt
+
+    fm_ok  = result.get("fm_available",  False)
+    teu_ok = result.get("teu_available", False)
+
+    # Colonnes A-C : labels (lignes 1-5 fusionnées)
+    ws.merge_cells("A1:A5"); _left_label(ws["A1"], "Service")
+    ws.merge_cells("B1:B5"); _left_label(ws["B1"], "Date")
+    ws.merge_cells("C1:C5"); _left_label(ws["C1"], "Forecast\nvolume")
+
+    # Ligne 1 — Discharge / Load
+    ws.merge_cells("D1:F1"); _navy(ws["D1"], "Discharge")
+    ws.merge_cells("G1:I1"); _navy(ws["G1"], "Load")
+
+    # Ligne 2 — Totaux containers
+    ws.merge_cells("D2:F2"); _total(ws["D2"], result.get("pred_D"))
+    ws.merge_cells("G2:I2"); _total(ws["G2"], result.get("pred_L"))
+
+    # Ligne 3 — Full | Empty | Reefer
+    for col, lbl in zip([4,5,6,7,8,9], ["Full","Empty","Reefer","Full","Empty","Reefer"]):
+        _med_blue(ws.cell(row=3, column=col), lbl)
+
+    # Ligne 4 — Containers
+    d_full  = result.get("D_full")  if fm_ok else None
+    d_empty = result.get("D_empty") if fm_ok else None
+    l_full  = result.get("L_full")  if fm_ok else None
+    l_empty = result.get("L_empty") if fm_ok else None
+    for col, val in zip([4,5,6,7,8,9], [d_full, d_empty, None, l_full, l_empty, None]):
+        _cntr(ws.cell(row=4, column=col), val)
+
+    # Ligne 5 — Labels TEU
+    for col in range(4, 10):
+        _teu_lbl(ws.cell(row=5, column=col))
+
+    # Ligne 6 — Données réelles
+    _left_data(ws.cell(row=6, column=1), result.get("lane", ""), bold=True)
+    _left_data(ws.cell(row=6, column=2), result.get("last_date", ""))
+    _left_data(ws.cell(row=6, column=3), result.get("volume"), bold=True, fmt="#,##0")
+
+    d_ft = result.get("D_full_teu")  if teu_ok else None
+    d_et = result.get("D_empty_teu") if teu_ok else None
+    l_ft = result.get("L_full_teu")  if teu_ok else None
+    l_et = result.get("L_empty_teu") if teu_ok else None
+    for col, val in zip([4,5,6,7,8,9], [d_ft, d_et, None, l_ft, l_et, None]):
+        _teu_val(ws.cell(row=6, column=col), val)
+
+    # Dimensions
+    ws.column_dimensions["A"].width = 12
+    ws.column_dimensions["B"].width = 14
+    ws.column_dimensions["C"].width = 14
+    for col in ["D","E","F","G","H","I"]:
+        ws.column_dimensions[col].width = 13
+
+    ws.row_dimensions[1].height = 28
+    ws.row_dimensions[2].height = 32
+    ws.row_dimensions[3].height = 22
+    ws.row_dimensions[4].height = 26
+    ws.row_dimensions[5].height = 20
+    ws.row_dimensions[6].height = 26
+
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    return buf

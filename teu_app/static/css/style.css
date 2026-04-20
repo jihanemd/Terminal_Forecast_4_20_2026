@@ -61,7 +61,7 @@ body{font-family:var(--sans);background:#F3F4F6;color:var(--ink);min-height:100v
 .theme-toggle:hover{background:rgba(255,255,255,.1);color:#E2E8F0}
 
 /* ── Main content ── */
-.main-content{margin-left:var(--sidebar-w);flex:1;padding:32px 36px 60px;max-width:880px}
+.main-content{margin-left:var(--sidebar-w);flex:1;padding:32px 36px 60px;max-width:1200px}
 
 /* ── Page panels ── */
 .page-panel{display:none}
@@ -344,3 +344,24 @@ tr:hover td{background:var(--surface)}
 .pill-ltf{background:#DBEAFE;color:#1E3A8A}
 .pill-lte{background:#D1FAE5;color:#065F46}
 .pill-teu{background:#EDE9FE;color:#4C1D95;font-weight:700}
+
+/* ── TEU Summary Table (style Excel) ─────────────────────────────────────────── */
+.teu-summary-wrap{margin-top:24px;border-top:1px solid var(--border);padding-top:20px}
+.teu-summary-label{font-family:var(--mono);font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.09em;margin-bottom:12px}
+.teu-summary-table{width:100%;border-collapse:collapse;font-size:13px;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md)}
+.teu-summary-table .tsh-discharge,.teu-summary-table .tsh-load{background:#132954;color:#ffffff;text-align:center;padding:12px 10px;font-size:13px;font-weight:600;letter-spacing:.04em}
+.teu-summary-table .tsh-total{text-align:center;padding:12px 10px;font-family:var(--mono);font-size:22px;font-weight:700;color:#1A56DB;background:#EEF4FF}
+.teu-summary-table .tsh-sub{background:#2563EB;color:#ffffff;text-align:center;padding:9px 10px;font-size:12px;font-weight:600;letter-spacing:.04em}
+.teu-summary-table .tsr-containers td{text-align:center;padding:12px 10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ink);background:#ffffff;border-bottom:1px solid #DBEAFE}
+.teu-summary-table .tsr-containers td.dash{color:var(--muted);font-weight:400}
+.teu-summary-table .tsr-teu-label td{text-align:center;padding:7px 10px;font-family:var(--mono);font-size:11px;font-weight:600;color:#1D4ED8;background:#DBEAFE;letter-spacing:.06em;text-transform:uppercase}
+.teu-summary-table .tsr-teu-values td{text-align:center;padding:12px 10px;font-family:var(--mono);font-size:15px;font-weight:700;color:var(--ink);background:#F0F7FF;border-top:1px solid #BFDBFE}
+.teu-summary-table .tsr-teu-values td.dash{color:var(--muted);font-weight:400}
+.teu-summary-table .sep-col{width:4px;background:#E5E7EB;padding:0}
+[data-theme="dark"] .teu-summary-table .tsh-discharge,
+[data-theme="dark"] .teu-summary-table .tsh-load{background:#1e3a5f}
+[data-theme="dark"] .teu-summary-table .tsh-total{background:#1e3a5f;color:#60A5FA}
+[data-theme="dark"] .teu-summary-table .tsh-sub{background:#1D4ED8}
+[data-theme="dark"] .teu-summary-table .tsr-containers td{background:#1f2937;color:var(--ink)}
+[data-theme="dark"] .teu-summary-table .tsr-teu-label td{background:#1e3a5f;color:#93C5FD}
+[data-theme="dark"] .teu-summary-table .tsr-teu-values td{background:#172A44;color:var(--ink)}

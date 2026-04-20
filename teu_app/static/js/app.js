@@ -6,6 +6,7 @@ let selectedLane   = '';
 let sessionHistory = [];
 let compareLanes   = [];
 let lastBatchResults = null;
+let lastTEUResult    = null;
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -83,7 +84,7 @@ function buildComboList(lanes) {
   const list = document.getElementById('comboList');
   list.innerHTML = '';
   if (!lanes.length) {
-    list.innerHTML = '<div class="combo-empty">Aucune lane trouvée</div>';
+    list.innerHTML = '<div class="combo-empty">No lane found</div>';
     return;
   }
   lanes.forEach(l => {
@@ -152,7 +153,7 @@ function onLaneText() {
   document.getElementById('laneText').value = v;
   if (v) {
     selectedLane = v;
-    document.getElementById('comboText').textContent = '— Choisir —';
+    document.getElementById('comboText').textContent = '— Select —';
     document.getElementById('comboDot').className = 'combo-dot';
     document.getElementById('selectedLane').value = '';
   }
@@ -162,9 +163,9 @@ function getManualLane() {
 }
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
-const fmt = n => n != null ? Math.round(n).toLocaleString('fr-FR') : '—';
+const fmt = n => n != null ? Math.round(n).toString() : '—';
 
-function setLoading(id, msg = 'Calcul en cours…') {
+function setLoading(id, msg = 'Processing…') {
   document.getElementById(id).innerHTML =
     `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>${msg}</div>`;
 }
@@ -173,18 +174,18 @@ function setLoading(id, msg = 'Calcul en cours…') {
 async function predict() {
   const lane   = getManualLane();
   const volume = parseInt(document.getElementById('volumeInput').value) || 0;
-  if (!lane)   { showToast('Veuillez sélectionner ou saisir une lane.', 'warn'); return; }
-  if (!volume) { showToast('Veuillez saisir un volume valide.', 'warn'); return; }
+  if (!lane)   { showToast('Please select or enter a lane.', 'warn'); return; }
+  if (!volume) { showToast('Please enter a valid volume.', 'warn'); return; }
 
   const btn = document.getElementById('btnPredict');
   btn.classList.add('loading');
-  btn.textContent = 'Calcul…';
+  btn.textContent = 'Calculating…';
   setLoading('resultManual');
 
   try {
     const res  = await fetch('/api/predict', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({lane,volume}) });
     const data = await res.json();
-    btn.classList.remove('loading'); btn.textContent = 'Calculer Load & Discharge';
+    btn.classList.remove('loading'); btn.textContent = 'Calculate Load & Discharge';
     if (!res.ok) {
       document.getElementById('resultManual').innerHTML = `<div class="error-box">❌ ${data.error}</div>`;
       showToast(data.error, 'error');
@@ -194,9 +195,9 @@ async function predict() {
     addToHistory(data);
     showToast(`Lane ${data.lane} — L: ${fmt(data.pred_L)} · D: ${fmt(data.pred_D)}`, 'success');
   } catch(e) {
-    btn.classList.remove('loading'); btn.textContent = 'Calculer Load & Discharge';
-    document.getElementById('resultManual').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
-    showToast('Erreur réseau', 'error');
+    btn.classList.remove('loading'); btn.textContent = 'Calculate Load & Discharge';
+    document.getElementById('resultManual').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
+    showToast('Network error', 'error');
   }
 }
 
@@ -205,7 +206,7 @@ function buildResultHTML(d) {
   const loadArc = (d.pct_L / 100) * circ;
   const dischArc = (d.pct_D / 100) * circ;
   const warn = d.outdated
-    ? `<div class="warn-box">⚠ Dernière escale le <strong>${d.last_date}</strong> — données potentiellement obsolètes</div>` : '';
+    ? `<div class="warn-box">⚠ Last call: <strong>${d.last_date}</strong> — data may be outdated</div>` : '';
 
   return `
     <div class="result-section">
@@ -213,14 +214,14 @@ function buildResultHTML(d) {
       ${warn}
       <div class="result-grid">
         <div class="result-card load">
-          <div class="rc-label">Load estimé</div>
+          <div class="rc-label">Estimated Load</div>
           <div class="rc-value" id="rcL">${fmt(d.pred_L)}</div>
-          <div class="rc-pct">${d.pct_L.toFixed(1)}% du volume</div>
+          <div class="rc-pct">${d.pct_L.toFixed(1)}% of volume</div>
         </div>
         <div class="result-card disch">
-          <div class="rc-label">Discharge estimé</div>
+          <div class="rc-label">Estimated Discharge</div>
           <div class="rc-value" id="rcD">${fmt(d.pred_D)}</div>
-          <div class="rc-pct">${d.pct_D.toFixed(1)}% du volume</div>
+          <div class="rc-pct">${d.pct_D.toFixed(1)}% of volume</div>
         </div>
       </div>
       <div class="donut-wrap">
@@ -246,10 +247,10 @@ function buildResultHTML(d) {
         </div>
       </div>
       <div class="info-grid">
-        <div class="info-cell"><div class="ic-label">Escales analysées</div><div class="ic-value">${d.n_voyages} voyages</div></div>
-        <div class="info-cell"><div class="ic-label">Moy. Load / escale</div><div class="ic-value">${fmt(d.avg_L)}</div></div>
-        <div class="info-cell"><div class="ic-label">Moy. Discharge / escale</div><div class="ic-value">${fmt(d.avg_D)}</div></div>
-        <div class="info-cell"><div class="ic-label">Total analysé</div><div class="ic-value">${fmt(d.pred_L + d.pred_D)}</div></div>
+        <div class="info-cell"><div class="ic-label">Analysed calls</div><div class="ic-value">${d.n_voyages} voyages</div></div>
+        <div class="info-cell"><div class="ic-label">Avg. Load / call</div><div class="ic-value">${fmt(d.avg_L)}</div></div>
+        <div class="info-cell"><div class="ic-label">Avg. Discharge / call</div><div class="ic-value">${fmt(d.avg_D)}</div></div>
+        <div class="info-cell"><div class="ic-label">Total analysed</div><div class="ic-value">${fmt(d.pred_L + d.pred_D)}</div></div>
       </div>
     </div>`;
 }
@@ -298,7 +299,7 @@ function initComparePanel() {
   addCompareLane(); addCompareLane();
 }
 function addCompareLane() {
-  if (compareLanes.length >= 4) { showToast('Maximum 4 lanes pour la comparaison.', 'warn'); return; }
+  if (compareLanes.length >= 4) { showToast('Maximum 4 lanes for comparison.', 'warn'); return; }
   compareLanes.push('');
   renderCompareLanes();
 }
@@ -332,21 +333,21 @@ function updateCompareLane(i, val) {
 async function runComparison() {
   const lanes  = compareLanes.filter(l => l);
   const volume = parseInt(document.getElementById('compareVolume').value) || 0;
-  if (lanes.length < 2) { showToast('Sélectionnez au moins 2 lanes.', 'warn'); return; }
-  if (!volume)          { showToast('Saisissez un volume valide.', 'warn'); return; }
-  setLoading('compareResult', 'Comparaison en cours…');
+  if (lanes.length < 2) { showToast('Select at least 2 lanes.', 'warn'); return; }
+  if (!volume)          { showToast('Enter a valid volume.', 'warn'); return; }
+  setLoading('compareResult', 'Comparing…');
   try {
     const res  = await fetch('/api/predict/compare', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({lanes,volume}) });
     const data = await res.json();
     if (!res.ok) { document.getElementById('compareResult').innerHTML = `<div class="error-box">❌ ${data.error}</div>`; return; }
     renderComparison(data);
   } catch(e) {
-    document.getElementById('compareResult').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
+    document.getElementById('compareResult').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
   }
 }
 function renderComparison(data) {
   const rows = data.results.map(r => {
-    if (r.unknown) return `<tr><td class="td-lane">${r.lane}</td><td colspan="5"><span class="pill pill-unknown">Lane inconnue</span></td></tr>`;
+    if (r.unknown) return `<tr><td class="td-lane">${r.lane}</td><td colspan="5"><span class="pill pill-unknown">Unknown lane</span></td></tr>`;
     return `
       <tr>
         <td class="td-lane">${r.lane}</td>
@@ -382,26 +383,26 @@ function handleFile(event) { const f = event.target.files[0]; if (f) uploadFile(
 async function uploadFile(file) {
   const name = file.name.toLowerCase();
   if (!name.endsWith('.xlsx') && !name.endsWith('.xls') && !name.endsWith('.csv')) {
-    document.getElementById('batchResult').innerHTML = '<div class="warn-box">Format non supporté.</div>'; return;
+    document.getElementById('batchResult').innerHTML = '<div class="warn-box">Unsupported format.</div>'; return;
   }
-  setLoading('batchResult', `Traitement de "${file.name}"…`);
+  setLoading('batchResult', `Processing "${file.name}"…`);
   const fd = new FormData(); fd.append('file', file);
   try {
     const res  = await fetch('/api/predict/batch', { method:'POST', body:fd });
     const data = await res.json();
     if (!res.ok) { document.getElementById('batchResult').innerHTML = `<div class="warn-box">${data.error}</div>`; return; }
     renderBatch(data);
-    showToast(`${data.count} lignes traitées avec succès`, 'success');
+    showToast(`${data.count} rows processed successfully`, 'success');
   } catch(e) {
-    document.getElementById('batchResult').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
+    document.getElementById('batchResult').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
   }
 }
 function renderBatch(data) {
   lastBatchResults = data.results;
   const { results, errors, count } = data;
-  const errHtml = errors.length ? `<div class="warn-box" style="margin-bottom:12px">${errors.length} ligne(s) ignorée(s) : ${errors.slice(0,3).join(' | ')}</div>` : '';
+  const errHtml = errors.length ? `<div class="warn-box" style="margin-bottom:12px">${errors.length} row(s) skipped: ${errors.slice(0,3).join(' | ')}</div>` : '';
   const rows = results.map(r => r.unknown
-    ? `<tr><td class="td-lane">${r.lane}</td><td>${fmt(r.volume)}</td><td colspan="5"><span class="pill pill-unknown">Lane inconnue</span></td></tr>`
+    ? `<tr><td class="td-lane">${r.lane}</td><td>${fmt(r.volume)}</td><td colspan="5"><span class="pill pill-unknown">Unknown lane</span></td></tr>`
     : `<tr>
         <td class="td-lane">${r.lane}${r.outdated?' ⚠':''}</td>
         <td style="font-family:var(--mono)">${fmt(r.volume)}</td>
@@ -414,7 +415,7 @@ function renderBatch(data) {
   document.getElementById('batchResult').innerHTML = `
     ${errHtml}
     <div class="batch-meta">
-      <span>${count} ligne(s) traitée(s)</span>
+      <span>${count} row(s) processed</span>
       <div style="display:flex;gap:8px">
         <button class="btn-secondary" onclick="exportResults()">Exporter .xlsx</button>
         <button class="btn-secondary" onclick="window.print()">Exporter PDF</button>
@@ -422,7 +423,7 @@ function renderBatch(data) {
     </div>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Lane</th><th>Volume</th><th>Load</th><th>Discharge</th><th>% L</th><th>% D</th><th>Période</th></tr></thead>
+        <thead><tr><th>Lane</th><th>Volume</th><th>Load</th><th>Discharge</th><th>% L</th><th>% D</th><th>Period</th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
     </div>`;
@@ -433,7 +434,7 @@ async function exportResults() {
   if (!lastBatchResults) return;
   try {
     const res   = await fetch('/api/export', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({results:lastBatchResults}) });
-    if (!res.ok) { showToast('Erreur lors de l\'export.', 'error'); return; }
+    if (!res.ok) { showToast('Export error.', 'error'); return; }
     const blob  = await res.blob();
     const url   = URL.createObjectURL(blob);
     const a     = document.createElement('a');
@@ -441,8 +442,8 @@ async function exportResults() {
     a.download  = `predictions_LD_${new Date().toISOString().slice(0,10)}.xlsx`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('Export Excel téléchargé', 'success');
-  } catch(e) { showToast('Erreur réseau lors de l\'export', 'error'); }
+    showToast('Excel export downloaded', 'success');
+  } catch(e) { showToast('Network error during export', 'error'); }
 }
 
 // ── Update ratios ─────────────────────────────────────────────────────────────
@@ -457,20 +458,20 @@ async function loadUpdateStatus() {
     if (d.last_update) {
       bar.className = 'update-status-bar update-status-ok';
       bar.innerHTML = `<span class="us-dot us-dot-ok"></span>
-        Dernière màj : <strong>${d.last_update}</strong>
-        &nbsp;·&nbsp; Fichier : <code>${d.filename}</code>
-        &nbsp;·&nbsp; Période : ${d.period_start} → ${d.period_end}
-        &nbsp;·&nbsp; ${d.updated_lanes.length} lane(s) mises à jour`;
+        Last update: <strong>${d.last_update}</strong>
+        &nbsp;·&nbsp; File: <code>${d.filename}</code>
+        &nbsp;·&nbsp; Period: ${d.period_start} → ${d.period_end}
+        &nbsp;·&nbsp; ${d.updated_lanes.length} lane(s) updated`;
       if (dot) dot.style.display = 'block';
       if (ssDot) { ssDot.style.background = '#10B981'; }
-      if (ssLbl) ssLbl.textContent = 'À jour';
+      if (ssLbl) ssLbl.textContent = 'Up to date';
     } else {
       bar.className = 'update-status-bar update-status-none';
-      bar.innerHTML = `<span class="us-dot us-dot-none"></span>Aucune mise à jour — ratios initiaux actifs`;
+      bar.innerHTML = `<span class="us-dot us-dot-none"></span>No update — initial ratios active`;
       if (ssDot) { ssDot.style.background = '#F59E0B'; }
       if (ssLbl) ssLbl.textContent = 'Initial';
     }
-  } catch(e) { if(bar) bar.textContent = 'Statut indisponible'; }
+  } catch(e) { if(bar) bar.textContent = 'Status unavailable'; }
 }
 function handleMovesFileDrop(event) {
   event.preventDefault();
@@ -480,7 +481,7 @@ function handleMovesFileDrop(event) {
 function handleMovesFile(event) { const f = event.target.files[0]; if (f) uploadMovesFile(f); event.target.value=''; }
 async function uploadMovesFile(file) {
   const result = document.getElementById('updateResult');
-  result.innerHTML = `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>Traitement de "${file.name}"…</div>`;
+  result.innerHTML = `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>Processing "${file.name}"…</div>`;
   const fd = new FormData(); fd.append('file', file);
   try {
     const res  = await fetch('/api/update-ratios', { method:'POST', body:fd });
@@ -488,16 +489,16 @@ async function uploadMovesFile(file) {
     if (!res.ok) { result.innerHTML = `<div class="error-box">❌ ${data.error}</div>`; showToast(data.error,'error'); return; }
     result.innerHTML = `
       <div class="update-report">
-        <div class="update-report-header">✅ Ratios mis à jour
-          <span class="update-report-meta">${data.total_rows.toLocaleString('fr-FR')} lignes · Période ${data.period_start} → ${data.period_end} · ${data.n_lanes} lanes actives</span>
+        <div class="update-report-header">✅ Ratios updated
+          <span class="update-report-meta">${data.total_rows.toLocaleString()} rows &middot; Period ${data.period_start} → ${data.period_end} &middot; ${data.n_lanes} active lanes</span>
         </div>
-        ${data.updated_lanes.length ? `<div class="update-report-group"><div class="urg-label">✅ Mises à jour (${data.updated_lanes.length})</div><div class="urg-pills">${data.updated_lanes.map(l=>`<span class="pill pill-updated">${l}</span>`).join('')}</div></div>` : ''}
-        ${data.new_lanes.length     ? `<div class="update-report-group"><div class="urg-label">🆕 Nouvelles (${data.new_lanes.length})</div><div class="urg-pills">${data.new_lanes.map(l=>`<span class="pill pill-new-lane">${l}</span>`).join('')}</div></div>` : ''}
-        ${data.unchanged_lanes.length ? `<div class="update-report-group"><div class="urg-label">⏸ Non présentes (${data.unchanged_lanes.length})</div><div class="urg-pills">${data.unchanged_lanes.map(l=>`<span class="pill pill-unchanged">${l}</span>`).join('')}</div></div>` : ''}
+        ${data.updated_lanes.length ? `<div class="update-report-group"><div class="urg-label">✅ Updated (${data.updated_lanes.length})</div><div class="urg-pills">${data.updated_lanes.map(l=>`<span class="pill pill-updated">${l}</span>`).join('')}</div></div>` : ''}
+        ${data.new_lanes.length     ? `<div class="update-report-group"><div class="urg-label">🆕 New (${data.new_lanes.length})</div><div class="urg-pills">${data.new_lanes.map(l=>`<span class="pill pill-new-lane">${l}</span>`).join('')}</div></div>` : ''}
+        ${data.unchanged_lanes.length ? `<div class="update-report-group"><div class="urg-label">⏸ Not present (${data.unchanged_lanes.length})</div><div class="urg-pills">${data.unchanged_lanes.map(l=>`<span class="pill pill-unchanged">${l}</span>`).join('')}</div></div>` : ''}
       </div>`;
-    showToast(`${data.n_lanes} lanes actives après mise à jour`, 'success');
+    showToast(`${data.n_lanes} active lanes after update`, 'success');
     loadLanesDetails(); loadUpdateStatus(); loadDashboard();
-  } catch(e) { result.innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`; showToast('Erreur réseau','error'); }
+  } catch(e) { result.innerHTML = `<div class="error-box">Network error: ${e.message}</div>`; showToast('Network error','error'); }
 }
 
 // ════════════════════════════════════════════════════════════════════
@@ -511,7 +512,7 @@ function buildComboListFM(lanes) {
   const list = document.getElementById('fmComboList');
   if (!list) return;
   list.innerHTML = '';
-  if (!lanes.length) { list.innerHTML = '<div class="combo-empty">Aucune lane</div>'; return; }
+  if (!lanes.length) { list.innerHTML = '<div class="combo-empty">No lane</div>'; return; }
   lanes.forEach(l => {
     const div = document.createElement('div');
     div.className = 'combo-option';
@@ -556,7 +557,7 @@ function onFMLaneText() {
   document.getElementById('fmLaneText').value = v;
   if (v) {
     selectedFMLane = v;
-    document.getElementById('fmComboText').textContent = '— Choisir —';
+    document.getElementById('fmComboText').textContent = '— Select —';
     document.getElementById('fmComboDot').className = 'combo-dot';
     document.getElementById('fmSelectedLane').value = '';
   }
@@ -574,11 +575,11 @@ function buildComboList(lanes) { _origBuildComboList(lanes); buildComboListFM(la
 async function predictFM() {
   const lane   = getFMLane();
   const volume = parseInt(document.getElementById('fmVolumeInput').value) || 0;
-  if (!lane)   { showToast('Veuillez sélectionner ou saisir une lane.', 'warn'); return; }
-  if (!volume) { showToast('Veuillez saisir un volume valide.', 'warn'); return; }
+  if (!lane)   { showToast('Please select or enter a lane.', 'warn'); return; }
+  if (!volume) { showToast('Please enter a valid volume.', 'warn'); return; }
 
   const btn = document.getElementById('btnPredictFM');
-  btn.textContent = 'Calcul…';
+  btn.textContent = 'Calculating…';
   setLoading('resultFM');
 
   try {
@@ -587,7 +588,7 @@ async function predictFM() {
       body: JSON.stringify({lane, volume})
     });
     const data = await res.json();
-    btn.textContent = 'Calculer D/L + Full & Empty';
+    btn.textContent = 'Calculate D/L + Full & Empty';
     if (!res.ok) {
       document.getElementById('resultFM').innerHTML = `<div class="error-box">❌ ${data.error}</div>`;
       showToast(data.error, 'error'); return;
@@ -595,9 +596,9 @@ async function predictFM() {
     document.getElementById('resultFM').innerHTML = buildFMResultHTML(data);
     showToast(`Lane ${data.lane} — D-Full: ${fmt(data.D_full)} · L-Full: ${fmt(data.L_full)}`, 'success');
   } catch(e) {
-    btn.textContent = 'Calculer D/L + Full & Empty';
-    document.getElementById('resultFM').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
-    showToast('Erreur réseau', 'error');
+    btn.textContent = 'Calculate D/L + Full & Empty';
+    document.getElementById('resultFM').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
+    showToast('Network error', 'error');
   }
 }
 
@@ -606,33 +607,33 @@ function buildFMResultHTML(d) {
   const loadArc = (d.pct_L / 100) * circ;
   const dischArc= (d.pct_D / 100) * circ;
   const warn    = d.outdated
-    ? `<div class="warn-box">⚠ Dernière escale le <strong>${d.last_date}</strong> — données potentiellement obsolètes</div>` : '';
+    ? `<div class="warn-box">⚠ Last call: <strong>${d.last_date}</strong> — data may be outdated</div>` : '';
   const noFM    = !d.fm_available
-    ? `<div class="warn-box">⚠ Ratios F/M non disponibles pour cette lane.</div>` : '';
+    ? `<div class="warn-box">⚠ F/M ratios not available for this lane.</div>` : '';
 
   const fmBlock = d.fm_available ? `
     <div class="fm-section">
-      <div class="fm-section-label">Étape 2 — Full / Empty par type de mouvement</div>
+      <div class="fm-section-label">Step 2 — Full / Empty by movement type</div>
       <div class="fm-grid">
         <div class="fm-card d-full">
           <div class="fm-lbl">Discharge Full</div>
           <div class="fm-val">${fmt(d.D_full)}</div>
-          <div class="fm-pct">${d.pct_D_full.toFixed(1)}% des Discharge</div>
+          <div class="fm-pct">${d.pct_D_full.toFixed(1)}% of Discharge</div>
         </div>
         <div class="fm-card d-empty">
           <div class="fm-lbl">Discharge Empty</div>
           <div class="fm-val">${fmt(d.D_empty)}</div>
-          <div class="fm-pct">${d.pct_D_empty.toFixed(1)}% des Discharge</div>
+          <div class="fm-pct">${d.pct_D_empty.toFixed(1)}% of Discharge</div>
         </div>
         <div class="fm-card l-full">
           <div class="fm-lbl">Load Full</div>
           <div class="fm-val">${fmt(d.L_full)}</div>
-          <div class="fm-pct">${d.pct_L_full.toFixed(1)}% des Load</div>
+          <div class="fm-pct">${d.pct_L_full.toFixed(1)}% of Load</div>
         </div>
         <div class="fm-card l-empty">
           <div class="fm-lbl">Load Empty</div>
           <div class="fm-val">${fmt(d.L_empty)}</div>
-          <div class="fm-pct">${d.pct_L_empty.toFixed(1)}% des Load</div>
+          <div class="fm-pct">${d.pct_L_empty.toFixed(1)}% of Load</div>
         </div>
       </div>
     </div>` : noFM;
@@ -641,17 +642,17 @@ function buildFMResultHTML(d) {
     <div class="result-section">
       <div class="result-header">Lane ${d.lane} &nbsp;·&nbsp; Volume ${fmt(d.volume)}</div>
       ${warn}
-      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Étape 1 — Load / Discharge</div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Step 1 — Load / Discharge</div>
       <div class="result-grid" style="margin-bottom:16px">
         <div class="result-card load">
-          <div class="rc-label">Load estimé</div>
+          <div class="rc-label">Estimated Load</div>
           <div class="rc-value">${fmt(d.pred_L)}</div>
-          <div class="rc-pct">${d.pct_L.toFixed(1)}% du volume</div>
+          <div class="rc-pct">${d.pct_L.toFixed(1)}% of volume</div>
         </div>
         <div class="result-card disch">
-          <div class="rc-label">Discharge estimé</div>
+          <div class="rc-label">Estimated Discharge</div>
           <div class="rc-value">${fmt(d.pred_D)}</div>
-          <div class="rc-pct">${d.pct_D.toFixed(1)}% du volume</div>
+          <div class="rc-pct">${d.pct_D.toFixed(1)}% of volume</div>
         </div>
       </div>
       <div class="donut-wrap">
@@ -671,8 +672,8 @@ function buildFMResultHTML(d) {
       </div>
       ${fmBlock}
       <div class="info-grid" style="margin-top:12px">
-        <div class="info-cell"><div class="ic-label">Escales analysées</div><div class="ic-value">${d.n_voyages} voyages</div></div>
-        <div class="info-cell"><div class="ic-label">Période D/L</div><div class="ic-value">${d.period_start} → ${d.last_date}</div></div>
+        <div class="info-cell"><div class="ic-label">Analysed calls</div><div class="ic-value">${d.n_voyages} voyages</div></div>
+        <div class="info-cell"><div class="ic-label">D/L Period</div><div class="ic-value">${d.period_start} → ${d.last_date}</div></div>
       </div>
     </div>`;
 }
@@ -688,16 +689,16 @@ function handleDropFM(event) {
 function handleFileFM(event) { const f = event.target.files[0]; if (f) uploadFileFM(f); event.target.value=''; }
 
 async function uploadFileFM(file) {
-  setLoading('batchFMResult', `Traitement D/L + F/M de "${file.name}"…`);
+  setLoading('batchFMResult', `Processing D/L + F/M for "${file.name}"…`);
   const fd = new FormData(); fd.append('file', file);
   try {
     const res  = await fetch('/api/predict/fm/batch', {method:'POST', body:fd});
     const data = await res.json();
     if (!res.ok) { document.getElementById('batchFMResult').innerHTML = `<div class="warn-box">${data.error}</div>`; return; }
     renderFMBatch(data);
-    showToast(`${data.count} lignes traitées (D/L + F/M)`, 'success');
+    showToast(`${data.count} rows processed (D/L + F/M)`, 'success');
   } catch(e) {
-    document.getElementById('batchFMResult').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
+    document.getElementById('batchFMResult').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
   }
 }
 
@@ -705,12 +706,12 @@ function renderFMBatch(data) {
   lastFMBatchResults = data.results;
   const {results, errors, count} = data;
   const errHtml = errors.length
-    ? `<div class="warn-box" style="margin-bottom:12px">${errors.length} ligne(s) ignorée(s) : ${errors.slice(0,3).join(' | ')}</div>` : '';
+    ? `<div class="warn-box" style="margin-bottom:12px">${errors.length} row(s) skipped: ${errors.slice(0,3).join(' | ')}</div>` : '';
 
   const rows = results.map(r => {
     if (r.unknown) return `<tr>
       <td class="td-lane">${r.lane}</td><td>${fmt(r.volume)}</td>
-      <td colspan="8"><span class="pill pill-unknown">Lane inconnue</span></td></tr>`;
+      <td colspan="8"><span class="pill pill-unknown">Unknown lane</span></td></tr>`;
     const wi  = r.outdated ? ' ⚠' : '';
     const fmOk = r.fm_available;
     return `<tr>
@@ -729,8 +730,8 @@ function renderFMBatch(data) {
   document.getElementById('batchFMResult').innerHTML = `
     ${errHtml}
     <div class="batch-meta">
-      <span>${count} ligne(s) traitée(s)</span>
-      <button class="btn-secondary" onclick="exportFMResults()">Exporter .xlsx</button>
+      <span>${count} row(s) processed</span>
+      <button class="btn-secondary" onclick="exportFMResults()">Export .xlsx</button>
     </div>
     <div class="table-wrap"><table>
       <thead><tr>
@@ -745,15 +746,15 @@ async function exportFMResults() {
   if (!lastFMBatchResults) return;
   try {
     const res  = await fetch('/api/export/fm', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({results:lastFMBatchResults})});
-    if (!res.ok) { showToast("Erreur lors de l'export.", 'error'); return; }
+    if (!res.ok) { showToast('Export error.', 'error'); return; }
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href = url; a.download = `predictions_FM_${new Date().toISOString().slice(0,10)}.xlsx`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('Export Excel F/M téléchargé', 'success');
-  } catch(e) { showToast("Erreur réseau lors de l'export", 'error'); }
+    showToast('F/M Excel export downloaded', 'success');
+  } catch(e) { showToast('Network error during export', 'error'); }
 }
 
 // ── Update FM status ──────────────────────────────────────────────────────────
@@ -765,15 +766,15 @@ async function loadFMUpdateStatus() {
     if (d.last_update) {
       bar.className = 'update-status-bar update-status-ok';
       bar.innerHTML = `<span class="us-dot us-dot-ok"></span>
-        Dernière màj F/M : <strong>${d.last_update}</strong>
+        Last F/M update: <strong>${d.last_update}</strong>
         &nbsp;·&nbsp; <code>${d.filename}</code>
-        &nbsp;·&nbsp; Période : ${d.period_start} → ${d.period_end}
+        &nbsp;·&nbsp; Period: ${d.period_start} → ${d.period_end}
         &nbsp;·&nbsp; ${d.n_lanes} lanes`;
     } else {
       bar.className = 'update-status-bar update-status-none';
-      bar.innerHTML = `<span class="us-dot us-dot-none"></span>Aucune mise à jour F/M — ratios initiaux actifs`;
+      bar.innerHTML = `<span class="us-dot us-dot-none"></span>No F/M update — initial ratios active`;
     }
-  } catch(e) { if (bar) bar.textContent = 'Statut F/M indisponible'; }
+  } catch(e) { if (bar) bar.textContent = 'F/M status unavailable'; }
 }
 
 function handleFMMovesFileDrop(event) {
@@ -785,7 +786,7 @@ function handleMovesFileFM(event) { const f = event.target.files[0]; if (f) uplo
 
 async function uploadMovesFileFM(file) {
   const result = document.getElementById('updateFMResult');
-  result.innerHTML = `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>Recalcul ratios F/M depuis "${file.name}"…</div>`;
+  result.innerHTML = `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>Recalculating F/M ratios from "${file.name}"…</div>`;
   const fd = new FormData(); fd.append('file', file);
   try {
     const res  = await fetch('/api/update-fm-ratios', {method:'POST', body:fd});
@@ -793,15 +794,15 @@ async function uploadMovesFileFM(file) {
     if (!res.ok) { result.innerHTML = `<div class="error-box">❌ ${data.error}</div>`; showToast(data.error,'error'); return; }
     result.innerHTML = `
       <div class="update-report">
-        <div class="update-report-header">✅ Ratios F/M mis à jour
-          <span class="update-report-meta">${data.total_rows.toLocaleString('fr-FR')} lignes · ${data.period_start} → ${data.period_end} · ${data.n_lanes} lanes</span>
+        <div class="update-report-header">✅ F/M ratios updated
+          <span class="update-report-meta">${data.total_rows.toLocaleString()} rows &middot; ${data.period_start} → ${data.period_end} &middot; ${data.n_lanes} lanes</span>
         </div>
         ${data.updated_lanes.length ? `<div class="update-report-group"><div class="urg-label">✅ Mises à jour (${data.updated_lanes.length})</div><div class="urg-pills">${data.updated_lanes.map(l=>`<span class="pill pill-updated">${l}</span>`).join('')}</div></div>` : ''}
         ${data.new_lanes.length     ? `<div class="update-report-group"><div class="urg-label">🆕 Nouvelles (${data.new_lanes.length})</div><div class="urg-pills">${data.new_lanes.map(l=>`<span class="pill pill-new-lane">${l}</span>`).join('')}</div></div>` : ''}
       </div>`;
-    showToast(`Ratios F/M mis à jour — ${data.n_lanes} lanes`, 'success');
+    showToast(`F/M ratios updated — ${data.n_lanes} lanes`, 'success');
     loadFMUpdateStatus();
-  } catch(e) { result.innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`; showToast('Erreur réseau','error'); }
+  } catch(e) { result.innerHTML = `<div class="error-box">Network error: ${e.message}</div>`; showToast('Network error','error'); }
 }
 
 // Init FM au chargement
@@ -818,7 +819,7 @@ function buildComboListTEU(lanes) {
   const list = document.getElementById('teuComboList');
   if (!list) return;
   list.innerHTML = '';
-  if (!lanes.length) { list.innerHTML = '<div class="combo-empty">Aucune lane</div>'; return; }
+  if (!lanes.length) { list.innerHTML = '<div class="combo-empty">No lane</div>'; return; }
   lanes.forEach(l => {
     const div = document.createElement('div');
     div.className = 'combo-option';
@@ -863,7 +864,7 @@ function onTEULaneText() {
   document.getElementById('teuLaneText').value = v;
   if (v) {
     selectedTEULane = v;
-    document.getElementById('teuComboText').textContent = '— Choisir —';
+    document.getElementById('teuComboText').textContent = '— Select —';
     document.getElementById('teuComboDot').className = 'combo-dot';
     document.getElementById('teuSelectedLane').value = '';
   }
@@ -885,11 +886,11 @@ function buildComboList(lanes) {
 async function predictTEU() {
   const lane   = getTEULane();
   const volume = parseInt(document.getElementById('teuVolumeInput').value) || 0;
-  if (!lane)   { showToast('Veuillez sélectionner ou saisir une lane.', 'warn'); return; }
-  if (!volume) { showToast('Veuillez saisir un volume valide.', 'warn'); return; }
+  if (!lane)   { showToast('Please select or enter a lane.', 'warn'); return; }
+  if (!volume) { showToast('Please enter a valid volume.', 'warn'); return; }
 
   const btn = document.getElementById('btnPredictTEU');
-  btn.textContent = 'Calcul…';
+  btn.textContent = 'Calculating…';
   setLoading('resultTEU');
 
   try {
@@ -898,17 +899,18 @@ async function predictTEU() {
       body: JSON.stringify({lane, volume})
     });
     const data = await res.json();
-    btn.textContent = 'Calculer D/L + F/M + TEU';
+    btn.textContent = 'Calculate D/L + F/M + TEU';
     if (!res.ok) {
       document.getElementById('resultTEU').innerHTML = `<div class="error-box">❌ ${data.error}</div>`;
       showToast(data.error, 'error'); return;
     }
+    lastTEUResult = data;  // ← stocker pour l'export
     document.getElementById('resultTEU').innerHTML = buildTEUResultHTML(data);
     showToast(`Lane ${data.lane} — Total TEU: ${fmt(data.total_teu)}`, 'success');
   } catch(e) {
-    btn.textContent = 'Calculer D/L + F/M + TEU';
-    document.getElementById('resultTEU').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
-    showToast('Erreur réseau', 'error');
+    btn.textContent = 'Calculate D/L + F/M + TEU';
+    document.getElementById('resultTEU').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
+    showToast('Network error', 'error');
   }
 }
 
@@ -917,21 +919,21 @@ function buildTEUResultHTML(d) {
   const loadArc  = (d.pct_L / 100) * circ;
   const dischArc = (d.pct_D / 100) * circ;
   const warn     = d.outdated
-    ? `<div class="warn-box">⚠ Dernière escale le <strong>${d.last_date}</strong> — données potentiellement obsolètes</div>` : '';
+    ? `<div class="warn-box">⚠ Last call: <strong>${d.last_date}</strong> — data may be outdated</div>` : '';
 
   // Étape 1 — D/L
   const step1 = `
-    <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Étape 1 — Load / Discharge</div>
+    <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Step 1 — Load / Discharge</div>
     <div class="result-grid" style="margin-bottom:16px">
       <div class="result-card load">
-        <div class="rc-label">Load estimé</div>
+        <div class="rc-label">Estimated Load</div>
         <div class="rc-value">${fmt(d.pred_L)}</div>
-        <div class="rc-pct">${d.pct_L.toFixed(1)}% du volume</div>
+        <div class="rc-pct">${d.pct_L.toFixed(1)}% of volume</div>
       </div>
       <div class="result-card disch">
-        <div class="rc-label">Discharge estimé</div>
+        <div class="rc-label">Estimated Discharge</div>
         <div class="rc-value">${fmt(d.pred_D)}</div>
-        <div class="rc-pct">${d.pct_D.toFixed(1)}% du volume</div>
+        <div class="rc-pct">${d.pct_D.toFixed(1)}% of volume</div>
       </div>
     </div>
     <div class="donut-wrap">
@@ -953,7 +955,7 @@ function buildTEUResultHTML(d) {
   // Étape 2 — F/M containers
   const step2 = d.fm_available ? `
     <div class="fm-section">
-      <div class="fm-section-label">Étape 2 — Full / Empty (containers)</div>
+      <div class="fm-section-label">Step 2 — Full / Empty (containers)</div>
       <div class="fm-grid">
         <div class="fm-card d-full"><div class="fm-lbl">Discharge Full</div><div class="fm-val">${fmt(d.D_full)}</div><div class="fm-pct">${(d.pct_D_full||0).toFixed(1)}% des D</div></div>
         <div class="fm-card d-empty"><div class="fm-lbl">Discharge Empty</div><div class="fm-val">${fmt(d.D_empty)}</div><div class="fm-pct">${(d.pct_D_empty||0).toFixed(1)}% des D</div></div>
@@ -965,10 +967,10 @@ function buildTEUResultHTML(d) {
   // Étape 3 — TEU
   const step3 = d.teu_available ? `
     <div class="teu-section">
-      <div class="teu-section-label">Étape 3 — TEU (20' × 1 + 40' × 2)</div>
+      <div class="teu-section-label">Step 3 — TEU (20' × 1 + 40' × 2)</div>
       <div class="teu-total-card">
         <div>
-          <div class="teu-total-lbl">Total TEU estimé</div>
+          <div class="teu-total-lbl">Estimated Total TEU</div>
           <div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px">L-TEU: ${fmt(d.L_total_teu)} + D-TEU: ${fmt(d.D_total_teu)}</div>
         </div>
         <div class="teu-total-val">${fmt(d.total_teu)}</div>
@@ -997,13 +999,72 @@ function buildTEUResultHTML(d) {
       </div>
     </div>` : `<div class="warn-box" style="margin-top:14px">⚠ Ratios TEU non disponibles pour cette lane.</div>`;
 
+  // ── Tableau synthèse style Excel ──
+  const fmOk  = d.fm_available;
+  const teuOk = d.teu_available;
+
+  const v = (val, ok) => ok ? fmt(val) : '—';
+  const cls = (ok) => ok ? '' : 'class="dash"';
+
+  const summaryTable = `
+    <div class="teu-summary-wrap">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="teu-summary-label">Summary — Containers &amp; TEU</div>
+        <button class="btn-secondary" onclick="exportTEUSingle()" style="height:32px;font-size:12px;display:flex;align-items:center;gap:6px">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Export Excel
+        </button>
+      </div>
+      <table class="teu-summary-table">
+        <thead>
+          <tr>
+            <th class="tsh-discharge" colspan="3">Discharge</th>
+            <th class="tsh-load"      colspan="3">Load</th>
+          </tr>
+          <tr>
+            <td class="tsh-total" colspan="3">${fmt(d.pred_D)}</td>
+            <td class="tsh-total" colspan="3">${fmt(d.pred_L)}</td>
+          </tr>
+          <tr>
+            <th class="tsh-sub">Full</th>
+            <th class="tsh-sub">Empty</th>
+            <th class="tsh-sub">Reefer</th>
+            <th class="tsh-sub">Full</th>
+            <th class="tsh-sub">Empty</th>
+            <th class="tsh-sub">Reefer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="tsr-containers">
+            <td ${cls(fmOk)}>${v(d.D_full,  fmOk)}</td>
+            <td ${cls(fmOk)}>${v(d.D_empty, fmOk)}</td>
+            <td class="dash">-</td>
+            <td ${cls(fmOk)}>${v(d.L_full,  fmOk)}</td>
+            <td ${cls(fmOk)}>${v(d.L_empty, fmOk)}</td>
+            <td class="dash">-</td>
+          </tr>
+          <tr class="tsr-teu-label">
+            <td>TEU</td><td>TEU</td><td>TEU</td>
+            <td>TEU</td><td>TEU</td><td>TEU</td>
+          </tr>
+          <tr class="tsr-teu-values">
+            <td ${cls(teuOk)}>${v(d.D_full_teu,  teuOk)}</td>
+            <td ${cls(teuOk)}>${v(d.D_empty_teu, teuOk)}</td>
+            <td class="dash">-</td>
+            <td ${cls(teuOk)}>${v(d.L_full_teu,  teuOk)}</td>
+            <td ${cls(teuOk)}>${v(d.L_empty_teu, teuOk)}</td>
+            <td class="dash">-</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`;
+
   return `
     <div class="result-section">
       <div class="result-header">Lane ${d.lane} &nbsp;·&nbsp; Volume ${fmt(d.volume)}</div>
       ${warn}
       ${step1}
-      ${step2}
-      ${step3}
+      ${summaryTable}
     </div>`;
 }
 
@@ -1018,16 +1079,16 @@ function handleDropTEU(event) {
 function handleFileTEU(event) { const f = event.target.files[0]; if (f) uploadFileTEU(f); event.target.value=''; }
 
 async function uploadFileTEU(file) {
-  setLoading('batchTEUResult', `Traitement pipeline TEU complet de "${file.name}"…`);
+  setLoading('batchTEUResult', `Processing full TEU pipeline for "${file.name}"…`);
   const fd = new FormData(); fd.append('file', file);
   try {
     const res  = await fetch('/api/predict/teu/batch', {method:'POST', body:fd});
     const data = await res.json();
     if (!res.ok) { document.getElementById('batchTEUResult').innerHTML = `<div class="warn-box">${data.error}</div>`; return; }
     renderTEUBatch(data);
-    showToast(`${data.count} lignes traitées (D/L + F/M + TEU)`, 'success');
+    showToast(`${data.count} rows processed (D/L + F/M + TEU)`, 'success');
   } catch(e) {
-    document.getElementById('batchTEUResult').innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`;
+    document.getElementById('batchTEUResult').innerHTML = `<div class="error-box">Network error: ${e.message}</div>`;
   }
 }
 
@@ -1035,12 +1096,12 @@ function renderTEUBatch(data) {
   lastTEUBatchResults = data.results;
   const {results, errors, count} = data;
   const errHtml = errors.length
-    ? `<div class="warn-box" style="margin-bottom:12px">${errors.length} ligne(s) ignorée(s) : ${errors.slice(0,3).join(' | ')}</div>` : '';
+    ? `<div class="warn-box" style="margin-bottom:12px">${errors.length} row(s) skipped: ${errors.slice(0,3).join(' | ')}</div>` : '';
 
   const rows = results.map(r => {
     if (r.unknown) return `<tr>
       <td class="td-lane">${r.lane}</td><td>${fmt(r.volume)}</td>
-      <td colspan="9"><span class="pill pill-unknown">Lane inconnue</span></td></tr>`;
+      <td colspan="9"><span class="pill pill-unknown">Unknown lane</span></td></tr>`;
     const wi   = r.outdated ? ' ⚠' : '';
     const tOk  = r.teu_available;
     return `<tr>
@@ -1059,8 +1120,8 @@ function renderTEUBatch(data) {
   document.getElementById('batchTEUResult').innerHTML = `
     ${errHtml}
     <div class="batch-meta">
-      <span>${count} ligne(s) traitée(s)</span>
-      <button class="btn-secondary" onclick="exportTEUResults()">Exporter .xlsx</button>
+      <span>${count} row(s) processed</span>
+      <button class="btn-secondary" onclick="exportTEUResults()">Export .xlsx</button>
     </div>
     <div class="table-wrap"><table>
       <thead><tr>
@@ -1075,18 +1136,39 @@ async function exportTEUResults() {
   if (!lastTEUBatchResults) return;
   try {
     const res  = await fetch('/api/export/teu', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({results:lastTEUBatchResults})});
-    if (!res.ok) { showToast("Erreur lors de l'export.", 'error'); return; }
+    if (!res.ok) { showToast('Export error.', 'error'); return; }
     const blob = await res.blob();
     const url  = URL.createObjectURL(blob);
     const a    = document.createElement('a');
     a.href = url; a.download = `predictions_TEU_${new Date().toISOString().slice(0,10)}.xlsx`;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    showToast('Export TEU téléchargé', 'success');
-  } catch(e) { showToast("Erreur réseau lors de l'export", 'error'); }
+    showToast('TEU export downloaded', 'success');
+  } catch(e) { showToast('Network error during export', 'error'); }
 }
 
-// ── Update TEU status ─────────────────────────────────────────────────────────
+// ── Export TEU synthèse (lane unique, format hiérarchique) ─────────────────────
+async function exportTEUSingle() {
+  if (!lastTEUResult) { showToast('No result to export.', 'warn'); return; }
+  try {
+    const res  = await fetch('/api/export/teu-single', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ result: lastTEUResult })
+    });
+    if (!res.ok) { showToast('Export error.', 'error'); return; }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `${lastTEUResult.lane}_${lastTEUResult.last_date || new Date().toISOString().slice(0,10)}.xlsx`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast(`TEU Excel export (${lastTEUResult.lane}) downloaded`, 'success');
+  } catch(e) { showToast('Network error during export', 'error'); }
+}
+
+
 async function loadTEUUpdateStatus() {
   const bar = document.getElementById('teuUpdateStatus');
   if (!bar) return;
@@ -1095,15 +1177,15 @@ async function loadTEUUpdateStatus() {
     if (d.last_update) {
       bar.className = 'update-status-bar update-status-ok';
       bar.innerHTML = `<span class="us-dot us-dot-ok"></span>
-        Dernière màj TEU : <strong>${d.last_update}</strong>
+        Last TEU update: <strong>${d.last_update}</strong>
         &nbsp;·&nbsp; <code>${d.filename}</code>
-        &nbsp;·&nbsp; Période : ${d.period_start} → ${d.period_end}
+        &nbsp;·&nbsp; Period: ${d.period_start} → ${d.period_end}
         &nbsp;·&nbsp; ${d.n_lanes} lanes`;
     } else {
       bar.className = 'update-status-bar update-status-none';
-      bar.innerHTML = `<span class="us-dot us-dot-none"></span>Aucune mise à jour TEU — ratios initiaux actifs`;
+      bar.innerHTML = `<span class="us-dot us-dot-none"></span>No TEU update — initial ratios active`;
     }
-  } catch(e) { if (bar) bar.textContent = 'Statut TEU indisponible'; }
+  } catch(e) { if (bar) bar.textContent = 'TEU status unavailable'; }
 }
 
 function handleTEUMovesFileDrop(event) {
@@ -1115,7 +1197,7 @@ function handleMovesFileTEU(event) { const f = event.target.files[0]; if (f) upl
 
 async function uploadMovesFileTEU(file) {
   const result = document.getElementById('updateTEUResult');
-  result.innerHTML = `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>Recalcul ratios TEU depuis "${file.name}"…</div>`;
+  result.innerHTML = `<div style="padding:16px 0;font-size:13px;color:var(--muted)"><span class="spinner dark"></span>Recalculating TEU ratios from "${file.name}"…</div>`;
   const fd = new FormData(); fd.append('file', file);
   try {
     const res  = await fetch('/api/update-teu-ratios', {method:'POST', body:fd});
@@ -1123,15 +1205,15 @@ async function uploadMovesFileTEU(file) {
     if (!res.ok) { result.innerHTML = `<div class="error-box">❌ ${data.error}</div>`; showToast(data.error,'error'); return; }
     result.innerHTML = `
       <div class="update-report">
-        <div class="update-report-header">✅ Ratios TEU mis à jour
-          <span class="update-report-meta">${data.total_rows.toLocaleString('fr-FR')} lignes · ${data.period_start} → ${data.period_end} · ${data.n_lanes} lanes</span>
+        <div class="update-report-header">✅ TEU ratios updated
+          <span class="update-report-meta">${data.total_rows.toLocaleString()} rows &middot; ${data.period_start} → ${data.period_end} &middot; ${data.n_lanes} lanes</span>
         </div>
         ${data.updated_lanes.length ? `<div class="update-report-group"><div class="urg-label">✅ Mises à jour (${data.updated_lanes.length})</div><div class="urg-pills">${data.updated_lanes.map(l=>`<span class="pill pill-updated">${l}</span>`).join('')}</div></div>` : ''}
         ${data.new_lanes.length     ? `<div class="update-report-group"><div class="urg-label">🆕 Nouvelles (${data.new_lanes.length})</div><div class="urg-pills">${data.new_lanes.map(l=>`<span class="pill pill-new-lane">${l}</span>`).join('')}</div></div>` : ''}
       </div>`;
-    showToast(`Ratios TEU mis à jour — ${data.n_lanes} lanes`, 'success');
+    showToast(`TEU ratios updated — ${data.n_lanes} lanes`, 'success');
     loadTEUUpdateStatus();
-  } catch(e) { result.innerHTML = `<div class="error-box">Erreur réseau : ${e.message}</div>`; showToast('Erreur réseau','error'); }
+  } catch(e) { result.innerHTML = `<div class="error-box">Network error: ${e.message}</div>`; showToast('Network error','error'); }
 }
 
 // Init TEU au chargement

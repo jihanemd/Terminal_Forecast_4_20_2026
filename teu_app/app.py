@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify, send_file
 from utils.predictor import predict_single, predict_batch, reload_ratios
-from utils.export import export_to_excel, export_fm_to_excel
+from utils.export import export_to_excel, export_fm_to_excel, export_teu_summary_to_excel
 from utils.updater import process_moves_file, load_update_log
 from utils.fm_predictor import predict_full_pipeline, predict_fm_batch, reload_fm_ratios
 from utils.updater_fm import process_moves_file_fm, load_fm_update_log
@@ -338,7 +338,22 @@ def api_export_teu():
     excel_buffer = export_teu_to_excel(results)
     return send_file(excel_buffer,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                     as_attachment=True, download_name='predictions_TEU.xlsx')
+                     as_attachment=True, download_name=f'Forcasting_{datetime.today().strftime("%Y-%m-%d")}.xlsx')
+
+
+@app.route('/api/export/teu-single', methods=['POST'])
+def api_export_teu_single():
+    """Exporte un résultat TEU unique dans le format synthèse hiérarchique (image Excel)."""
+    data   = request.get_json()
+    result = data.get('result', {})
+    if not result:
+        return jsonify({'error': 'Aucun résultat à exporter'}), 400
+    lane = result.get('lane', 'lane').replace('/', '-')
+    excel_buffer = export_teu_summary_to_excel(result)
+    return send_file(excel_buffer,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                     as_attachment=True,
+                     download_name=f'TEU_{lane}_{result.get("last_date", "")}.xlsx')
 
 
 @app.route('/api/update-teu-ratios', methods=['POST'])
