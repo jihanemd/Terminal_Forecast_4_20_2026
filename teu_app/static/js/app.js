@@ -1022,10 +1022,6 @@ function buildTEUResultHTML(d) {
             <th class="tsh-load"      colspan="3">Load</th>
           </tr>
           <tr>
-            <td class="tsh-total" colspan="3">${fmt(d.pred_D)}</td>
-            <td class="tsh-total" colspan="3">${fmt(d.pred_L)}</td>
-          </tr>
-          <tr>
             <th class="tsh-sub">Full</th>
             <th class="tsh-sub">Empty</th>
             <th class="tsh-sub">Reefer</th>
@@ -1035,18 +1031,7 @@ function buildTEUResultHTML(d) {
           </tr>
         </thead>
         <tbody>
-          <tr class="tsr-containers">
-            <td ${cls(fmOk)}>${v(d.D_full,  fmOk)}</td>
-            <td ${cls(fmOk)}>${v(d.D_empty, fmOk)}</td>
-            <td class="dash">-</td>
-            <td ${cls(fmOk)}>${v(d.L_full,  fmOk)}</td>
-            <td ${cls(fmOk)}>${v(d.L_empty, fmOk)}</td>
-            <td class="dash">-</td>
-          </tr>
-          <tr class="tsr-teu-label">
-            <td>TEU</td><td>TEU</td><td>TEU</td>
-            <td>TEU</td><td>TEU</td><td>TEU</td>
-          </tr>
+
           <tr class="tsr-teu-values">
             <td ${cls(teuOk)}>${v(d.D_full_teu,  teuOk)}</td>
             <td ${cls(teuOk)}>${v(d.D_empty_teu, teuOk)}</td>
